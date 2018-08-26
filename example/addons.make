@@ -1,1 +1,4 @@
-ofxFixtures
+ofxGui
+ofxDmx
+ofxFixture
+

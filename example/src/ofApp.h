@@ -2,8 +2,8 @@
 
 
 #include "ofMain.h"
-#include "ofxFixtures.h"
-
+#include "ofxFixture.h"
+#include "ofxGui.h"
 
 class ofApp: public ofBaseApp{
 	public:
@@ -23,31 +23,20 @@ class ofApp: public ofBaseApp{
         
         
         ofEasyCam camera;
-        
-        ofNode base; 
-        ofNode head;       
-        
-        ofBoxPrimitive box;
-        ofBoxPrimitive label;
-        ofBoxPrimitive bottom;
-        ofBoxPrimitive spot;
-
 
         // head variables 
         glm::vec3 orientation;
         glm::vec3 position;
-        glm::vec3 target;
-        float pan;
-        float tilt;
         
-        ofParameter<float> minPan, maxPan, minTilt, maxTilt;
+
         
-        void setTarget( glm::vec3 pos );
-        void setOrientation( float tilt, float pan );
-        float panAngle( glm::vec3 v);
-        float tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
         
         ofPlanePrimitive floor;
         ofPlanePrimitive wall;
-    
+
+        ofxDmx dmx;
+        ofx::fixture::Dimmer dimmer;
+        ofx::fixture::Head head;
+        
+        ofxPanel gui;
 };
