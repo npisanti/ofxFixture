@@ -79,8 +79,7 @@ void ofx::fixture::Simulation::update(){
                 
                 ofPopMatrix();
 
-                // draw grid 
-
+                // draw walls 
                 ofSetColor( 40 );
                 floor.draw();
                 wall.draw();
@@ -116,5 +115,13 @@ void ofx::fixture::Simulation::enable(){
 void ofx::fixture::Simulation::disable(){
     bActive = false;
     camera.disableMouseInput();
+}
+    
+void ofx::fixture::Simulation::setDrawAddress( bool drawAddress ){
+    Dimmer::bDrawAddress = drawAddress;
+}
+    
+void ofx::fixture::Simulation::toggleDrawAddress(){
+    Dimmer::bDrawAddress = ! Dimmer::bDrawAddress;
 }
     

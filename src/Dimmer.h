@@ -13,7 +13,6 @@ public:
     
     void setup( ofxDmx & dmx, int channel, int universe=1 );
 
-
     virtual std::string fixtureName();
     virtual void init(){}; // to send out default dmx messages
     virtual void update();
@@ -27,12 +26,15 @@ public:
     ofParameter<float> dimmer;
     ofParameter<float> zoom;
     
+    static bool bDrawAddress;
+    
 protected:
 	int channel;
 	int universe;
     ofxDmx * dmx;
     
     ofNode node; 
+    std::string address;
     
 private: 
     void onPositionChanged( glm::vec3 & value );

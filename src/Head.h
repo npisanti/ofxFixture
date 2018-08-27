@@ -32,6 +32,7 @@ public:
     
     void update() override;
     void draw() override;
+    
 
 protected: // to be called from subclasses
 
@@ -64,6 +65,7 @@ private:
     std::vector<ofParameter<float>*> fOptionals; 
     std::vector<ofParameter<int>*>   iOptionals;
     std::vector<ofParameter<bool>*>  bOptionals;
+    
 };
 
 }}

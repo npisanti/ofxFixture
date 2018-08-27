@@ -1,7 +1,6 @@
 
 #include "Head.h"
 
-
 ofx::fixture::Head::Head(){
 
     //  object init
@@ -103,7 +102,15 @@ void ofx::fixture::Head::draw(){
         // draw target
         ofSetColor( color ); // use fixture light color
         ofDrawSphere( target, 5 );
-        ofDrawLine( node.getPosition(), target );        
+        ofDrawLine( node.getPosition(), target ); 
+        if( bDrawAddress ){
+            ofSetColor( 255);    
+            ofDrawBitmapString( address, target );              
+        }
+    }
+    if( bDrawAddress ){
+        ofSetColor( 255);    
+        ofDrawBitmapString( address, node.getPosition());             
     }
 
 }

@@ -1,6 +1,7 @@
 
 #include "Dimmer.h"
 
+bool ofx::fixture::Dimmer::bDrawAddress = false;
 
 ofx::fixture::Dimmer::Dimmer(){
     parameters.setName( "fixture base class" );
@@ -31,8 +32,10 @@ void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe ){
     this->universe = universe;
     this->dmx = &dmx;
     
-    parameters.setName( "u"+ofToString(universe) + "ch" + ofToString(channel)+" " + fixtureName() );
-    installation.setName( "pos u"+ofToString(universe) + "ch" + ofToString(channel)+" " + fixtureName());
+    address = "u"+ofToString(universe) + "ch" + ofToString(channel);
+    
+    parameters.setName( address+" " + fixtureName() );
+    installation.setName( "pos "+address+" " + fixtureName());
     
     init();
 }

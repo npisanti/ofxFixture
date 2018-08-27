@@ -11,9 +11,7 @@ class Simulation {
 
 public:  
     Simulation();
-    //void setup( int w, int h );
-    //void setup( int x, int y, int w, int h);
-    
+
     void setStage( float stageWidht, float stageHeight, float stageDepth );
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
@@ -26,6 +24,9 @@ public:
     
     void enable();
     void disable();
+    
+    void setDrawAddress( bool drawAddress );
+    void toggleDrawAddress();
     
 private:
     glm::vec3 stage;

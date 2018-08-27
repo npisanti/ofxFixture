@@ -13,6 +13,7 @@ void ofApp::setup(){
     
     simulation.setStage( sw, sh, sd );
     simulation.setGraphics( 20, 20, 760, 760 );
+    simulation.setDrawAddress( true );
     
     head.setup( dmx, 1 );
     head.position.set( glm::vec3( sw*0.5f, sh, sd*0.5f) );
@@ -21,7 +22,7 @@ void ofApp::setup(){
     
     positions.setup("positions", "positions.xml", ofGetWidth()-440, 20 );
     positions.add( head.installation );
-    gui.setup("panel", "settings.xml", ofGetWidth()-220, 20 );
+    gui.setup("settings", "settings.xml", ofGetWidth()-220, 20 );
     gui.add( head.parameters );
 }
 
