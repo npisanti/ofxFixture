@@ -3,36 +3,37 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
-	ofSetVerticalSync(true);
-	ofSetCircleResolution(64);
-
-
-    // walls
-    floor.set( 600, 600 );
-    floor.rotateDeg( 90.0f, glm::vec3(1,0,0) );
-
-    wall.set( 600, 300 );
-    wall.setPosition( 0, 150, -300 );
-
-    // easy cam
-    camera.setPosition( glm::vec3(0.0f, 0.5f, 1.0f )); // up, front
-    camera.setTarget( glm::vec3( 0.0f, 0.0f, 0.0f ) );
-    
     ofSetWindowTitle( "moving spot simulation" );
+	ofSetVerticalSync(true);
+
+    // stage dimensions, I like to think it as centimeters
+    float sw = 1200.0f;
+    float sh = 500.0f;
+    float sd = 800.0f;
     
+    simulation.setStage( sw, sh, sd );
+    simulation.setGraphics( 20, 20, 760, 760 );
     
     head.setup( dmx, 1 );
-    head.position.set( glm::vec3(0, 225, 0) );
+    head.position.set( glm::vec3( sw*0.5f, sh, sd*0.5f) );
+    simulation.add( head );
     
+    
+    positions.setup("positions", "positions.xml", ofGetWidth()-440, 20 );
+    positions.add( head.installation );
     gui.setup("panel", "settings.xml", ofGetWidth()-220, 20 );
     gui.add( head.parameters );
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    head.setTarget( glm::vec3( 
+            ofNoise(ofGetElapsedTimef()*0.08f, 0) * 1200.0f, 
+            0.0f,
+            ofNoise(ofGetElapsedTimef()*0.08f, 2) * 800.0f
+    ));
+    
+    simulation.update();
 }
 
 //--------------------------------------------------------------
@@ -40,43 +41,9 @@ void ofApp::draw(){
     
     ofBackground(0);
     
-    head.setTarget( glm::vec3( 
-            ofSignedNoise(ofGetElapsedTimef()*0.08f, 0) * 200.0f, 
-            0.0f,
-            ofSignedNoise(ofGetElapsedTimef()*0.08f, 2) * 200.0f
-    ));
-
-    //tilt = ofNoise( ofGetElapsedTimef()*0.08f, 0) * 180.f;
-    //pan  = ofNoise( ofGetElapsedTimef()*0.08f, 2) * 360.f;
-
-    ofEnableDepthTest();
-    //ofEnableLighting();
-    camera.begin();
-
-        
-        head.draw();
-        
-        
-        // draw lines in the floor borders
-        ofSetColor(0);
-        ofDrawLine( -300, 0, -299, 300, 0, -299 ); 
-
-        // draw grid 
-
-        ofSetColor( 40 );
-        floor.draw();
-        wall.draw();
-        
-        ofSetColor( 255 );
-        ofDrawSphere( 0, 0, 0, 5);
-        
-    camera.end();
-    //ofDisableLighting();
+    simulation.draw();
     
-    ofDisableDepthTest();
-    
-
-
+    positions.draw();
     gui.draw();
 }
 

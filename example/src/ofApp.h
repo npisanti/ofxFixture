@@ -21,22 +21,12 @@ class ofApp: public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        
-        ofEasyCam camera;
-
-        // head variables 
-        glm::vec3 orientation;
-        glm::vec3 position;
-        
-
-        
-        
-        ofPlanePrimitive floor;
-        ofPlanePrimitive wall;
+        ofx::fixture::Simulation simulation;
 
         ofxDmx dmx;
         ofx::fixture::Dimmer dimmer;
         ofx::fixture::Head head;
         
         ofxPanel gui;
+        ofxPanel positions;
 };
