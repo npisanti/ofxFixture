@@ -24,6 +24,7 @@ void ofApp::setup(){
     positions.add( head.installation );
     gui.setup("settings", "settings.xml", ofGetWidth()-220, 20 );
     gui.add( head.parameters );
+    
 }
 
 //--------------------------------------------------------------

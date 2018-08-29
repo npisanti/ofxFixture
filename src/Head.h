@@ -5,10 +5,10 @@
 
 namespace ofx { namespace fixture { 
 
-class SnapshotManager;
+class States;
 
 class Head : public Dimmer {
-    friend class SnapshotManager;
+    friend class States;
     
 public:
     Head();
@@ -16,17 +16,17 @@ public:
     void setTarget( glm::vec3 pos );
     void setColor( const ofColor & color, bool alphaAsWhite=false );
 
-    ofParameter<float> pan;
-    ofParameter<float> tilt;
-
-    ofParameter<bool> chaseTarget;
-    ofParameter<glm::vec3> target;
-    
     ofParameterGroup color;
         ofParameter<float> red;
         ofParameter<float> green;
         ofParameter<float> blue;
         ofParameter<float> white;
+
+    ofParameter<float> pan;
+    ofParameter<float> tilt;
+
+    ofParameter<bool> chaseTarget;
+    ofParameter<glm::vec3> target;
 
     std::string fixtureName() override;
     

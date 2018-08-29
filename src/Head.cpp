@@ -36,12 +36,12 @@ ofx::fixture::Head::Head(){
     parameters.add( color );
     
     parameters.add( chaseTarget.set("chase target", true) );
-
-    target.addListener( this, &Head::onTargetChange);
-    parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(-600, -600, -600), glm::vec3(600, 600, 600) ) );
     
     parameters.add( pan.set("pan", 0.0f, panMin, panMax) );
     parameters.add( tilt.set("tilt", 0.0f, tiltMin, tiltMax) );
+    
+    target.addListener( this, &Head::onTargetChange);
+    parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(-600, -600, -600), glm::vec3(600, 600, 600) ) );
     
     fOptionals.clear();
     iOptionals.clear();
