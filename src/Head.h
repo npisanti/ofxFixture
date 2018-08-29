@@ -16,6 +16,8 @@ public:
     void setTarget( glm::vec3 pos );
     void setColor( const ofColor & color, bool alphaAsWhite=false );
 
+    ofParameter<float> zoom;
+    
     ofParameterGroup color;
         ofParameter<float> red;
         ofParameter<float> green;
@@ -54,7 +56,7 @@ private:
     ofNode head;       
     ofBoxPrimitive box;
     ofBoxPrimitive label;
-    ofBoxPrimitive spot;
+    ofCylinderPrimitive spot;
 
     void onTargetChange( glm::vec3 & value );
 

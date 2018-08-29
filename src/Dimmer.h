@@ -24,9 +24,8 @@ public:
 
     ofParameterGroup parameters;
     ofParameter<float> dimmer;
-    ofParameter<float> zoom;
     
-    static bool bDrawAddress;
+    static ofParameter<bool> bDrawAddress;
     
 protected:
 	int channel;
@@ -34,6 +33,7 @@ protected:
     ofxDmx * dmx;
     
     ofNode node; 
+    
     std::string address;
     
 private: 

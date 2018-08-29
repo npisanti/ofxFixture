@@ -8,12 +8,14 @@
 namespace ofx{ namespace fixture {
     
 class States {
+
+public:
     States();
     
     void add( Dimmer & dimmer );
     void add( Head & head );
 
-    void touch( std::string tag );
+    void init( std::string tag );
     
     void store( std::string tag );
     void store();
@@ -23,6 +25,10 @@ class States {
     
     void transition( std::string tagA, std::string tagB, float pct );
     void transition( std::string tag, float pct );
+    
+    void storeOrigin();
+    void storeDestination();    
+    void transition( float pct ); // from origin to destination
     
 private:
 
@@ -38,7 +44,6 @@ private:
         
         ofParameterGroup parameters;
             ofParameter<float> dimmer;
-            ofParameter<float> zoom;
     };
     
     struct HeadSnapshot{
@@ -71,7 +76,9 @@ private:
         std::vector<HeadSnapshot> heads;
     };
     
-    SystemSnapshot untagged;
+    SystemSnapshot origin;
+    SystemSnapshot destination;
+    
     std::map<std::string, SystemSnapshot> snapshots;
     
     std::vector<Head*> heads;

@@ -24,10 +24,16 @@ class ofApp: public ofBaseApp{
         ofx::fixture::Simulation simulation;
 
         ofxDmx dmx;
-        ofx::fixture::Dimmer dimmer;
-        ofx::fixture::Head head;
+        std::vector<ofx::fixture::Head> heads;
+        std::vector<ofx::fixture::Dimmer> dimmers;
+        
+        ofx::fixture::States states;
         
         ofxPanel gui;
         ofxPanel positions;
+        
+        ofParameter<bool> bTargetDemo;
 
+        int transitioning;
+        float cursor;
 };

@@ -23,10 +23,14 @@ ofx::fixture::Head::Head(){
     label.setParent(node);
     label.setPosition(0, -15, 20);
     label.set( 20, 3, 1 );
-    spot.set( 10, 30, 6 );
+    
+    spot.setResolution( 16, 4 );
+    spot.set( 10, 30 );
     
     spot.setParent( head );
     spot.rotateDeg( 90.0f, glm::vec3( 1, 0, 0) );
+    
+    parameters.add( zoom.set("zoom", 0.0f, 0.0f, 1.0f) );
     
     color.setName( "color" );
     color.add( red.set("red", 255.0f, 0.0f, 255.0f) );
@@ -35,11 +39,10 @@ ofx::fixture::Head::Head(){
     color.add( white.set("white", 0.0f, 0.0f, 255.0f) );
     parameters.add( color );
     
-    parameters.add( chaseTarget.set("chase target", true) );
-    
     parameters.add( pan.set("pan", 0.0f, panMin, panMax) );
     parameters.add( tilt.set("tilt", 0.0f, tiltMin, tiltMax) );
-    
+
+    parameters.add( chaseTarget.set("chase target", true) );    
     target.addListener( this, &Head::onTargetChange);
     parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(-600, -600, -600), glm::vec3(600, 600, 600) ) );
     
@@ -88,10 +91,6 @@ void ofx::fixture::Head::draw(){
     // draw spot spot
     ofSetColor(ofColor::white);
     spot.draw();
-    ofSetColor( ofColor::black );
-    spot.setScale(1.002f);
-    spot.drawWireframe();
-    spot.setScale(1.f);  
 
     ofSetColor( color, 120 );
     box.draw();
@@ -103,10 +102,6 @@ void ofx::fixture::Head::draw(){
         ofSetColor( color ); // use fixture light color
         ofDrawSphere( target, 5 );
         ofDrawLine( node.getPosition(), target ); 
-        if( bDrawAddress ){
-            ofSetColor( 255);    
-            ofDrawBitmapString( address, target );              
-        }
     }
     if( bDrawAddress ){
         ofSetColor( 255);    

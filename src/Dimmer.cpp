@@ -1,12 +1,11 @@
 
 #include "Dimmer.h"
 
-bool ofx::fixture::Dimmer::bDrawAddress = false;
+ofParameter<bool> ofx::fixture::Dimmer::bDrawAddress = ofParameter<bool>( "draw address", false );
 
 ofx::fixture::Dimmer::Dimmer(){
     parameters.setName( "fixture base class" );
     parameters.add( dimmer.set("dimmer", 0.0f, 0.0f, 1.0f) );
-    parameters.add( zoom.set("zoom", 0.0f, 0.0f, 1.0f) );
 
     installation.setName( "fixture base class pos" );
     position.addListener( this, &Dimmer::onPositionChanged);

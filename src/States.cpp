@@ -3,16 +3,14 @@
 
 ofx::fixture::States::States(){
     bTouching = false;
-    
-    // search for snapshot directory here 
 }
 
 
-void ofx::fixture::States::touch( std::string tag ){
+void ofx::fixture::States::init( std::string statename ){
     bTouching = true;
     
-    snapshots.insert( std::make_pair( tag, SystemSnapshot() ));
-    SystemSnapshot & snap = snapshots[tag];
+    snapshots.insert( std::make_pair( statename, SystemSnapshot() ));
+    SystemSnapshot & snap = snapshots[statename];
 
     snap.heads.resize( heads.size() );
     for( size_t i=0; i<heads.size(); ++i ){
@@ -26,51 +24,76 @@ void ofx::fixture::States::touch( std::string tag ){
         snap.system.add( snap.dimmers[i].parameters );
     }
 
-    // if tag exists, deserialize to snap here 
+    std::string path = ofToDataPath( "snapshots/"+statename+".json" );
+
+	ofFile file( path );
+	if( file.exists() ){
+        ofLogVerbose() << "found file for state name = "<<statename<<", loading";
+        ofJson json = ofLoadJson( path );
+        ofDeserialize( json, snap.system );
+    }else{
+        ofLogVerbose() << "file not found for state name = "<<statename;
+    }
 }
 
 
-void ofx::fixture::States::store( std::string tag ){
-    if( snapshots.count( tag ) >0 ){
-        SystemSnapshot & snap = snapshots[tag]; 
+void ofx::fixture::States::store( std::string statename ){
+    if( snapshots.count( statename ) >0 ){
+        SystemSnapshot & snap = snapshots[statename]; 
         store( snap );
         
-        // serialize snap here
+        ofJson json;
+        
+        ofSerialize( json, snap.system );
+        std::string path = ofToDataPath( "snapshots/"+statename+".json" );
+        ofSavePrettyJson( path, json );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given tag not initialized, use touch( std::string tag ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::recall( std::string tag ){
-    if( snapshots.count( tag ) >0 ){
-        recall( snapshots[tag] );
+void ofx::fixture::States::recall( std::string statename ){
+    if( snapshots.count( statename ) >0 ){
+        recall( snapshots[statename] );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given tag not initialized, use touch( std::string tag ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::transition( std::string tagA, std::string tagB, float pct ){
-    if( snapshots.count( tagA ) >0 && snapshots.count( tagB ) ){
-        transition( snapshots[tagA], snapshots[tagB], pct );
+void ofx::fixture::States::transition( std::string statenameA, std::string statenameB, float pct ){
+    if( snapshots.count( statenameA ) >0 && snapshots.count( statenameB ) ){
+        transition( snapshots[statenameA], snapshots[statenameB], pct );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given tag not initialized, use touch( std::string tag ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::transition( std::string tag, float pct ){
-    if( snapshots.count( tag ) >0 ){
-        transition( untagged, snapshots[tag], pct );
+void ofx::fixture::States::transition( std::string statename, float pct ){
+    if( snapshots.count( statename ) >0 ){
+        transition( origin, snapshots[statename], pct );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given tag not initialized, use touch( std::string tag ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
     }
+}
+
+void ofx::fixture::States::transition( float pct ){
+    transition( origin, destination, pct );
 }
 
 void ofx::fixture::States::store(){
-    store ( untagged );
+    store ( origin );
+}
+
+void ofx::fixture::States::storeOrigin(){
+    store ( origin );
+}
+
+void ofx::fixture::States::storeDestination(){
+    store ( destination );
 }
 
 void ofx::fixture::States::recall(){
-    recall( untagged );
+    recall( origin );
 }
 
 void ofx::fixture::States::store( SystemSnapshot & snap ){
@@ -106,22 +129,28 @@ ofx::fixture::States::SystemSnapshot::SystemSnapshot(){
         
 void ofx::fixture::States::add( Dimmer & dimmer ){
     if( bTouching ){
-        ofLogWarning()<< "[ofx::fixture::States] calling add() after touch() can lead to segmentation faults";
+        ofLogWarning()<< "[ofx::fixture::States] calling add() after init() can lead to segmentation faults";
     }
     dimmers.push_back( &dimmer );
-    untagged.dimmers.emplace_back();
-    untagged.dimmers.back().init( dimmer );
-    untagged.system.add( untagged.dimmers.back().parameters );
+    origin.dimmers.emplace_back();
+    origin.dimmers.back().init( dimmer );
+    origin.system.add( origin.dimmers.back().parameters );
+    destination.dimmers.emplace_back();
+    destination.dimmers.back().init( dimmer );
+    destination.system.add( destination.dimmers.back().parameters );
 }
 
 void ofx::fixture::States::add( Head & head ){
     if( bTouching ){
-        ofLogWarning()<< "[ofx::fixture::States] calling add() after touch() can lead to segmentation faults";
+        ofLogWarning()<< "[ofx::fixture::States] calling add() after init() can lead to segmentation faults";
     }
     heads.push_back( &head );
-    untagged.heads.emplace_back();
-    untagged.heads.back().init( head );
-    untagged.system.add( untagged.heads.back().parameters );
+    origin.heads.emplace_back();
+    origin.heads.back().init( head );
+    origin.system.add( origin.heads.back().parameters );
+    destination.heads.emplace_back();
+    destination.heads.back().init( head );
+    destination.system.add( destination.heads.back().parameters );
 }
     
 void ofx::fixture::States::DimmerSnapshot::init( Dimmer & dimmer ){
@@ -129,24 +158,18 @@ void ofx::fixture::States::DimmerSnapshot::init( Dimmer & dimmer ){
     
     this->dimmer.set( dimmer.dimmer.getName(), dimmer.dimmer.get(), dimmer.dimmer.getMin(), dimmer.dimmer.getMax() );
     parameters.add( this->dimmer );
-    
-    this->zoom.set( dimmer.zoom.getName(), dimmer.zoom.get(), dimmer.zoom.getMin(), dimmer.zoom.getMax() );
-    parameters.add( this->zoom );
 }
 
 void ofx::fixture::States::DimmerSnapshot::store( Dimmer & dimmer ){
     this->dimmer = dimmer.dimmer.get();
-    this->zoom = dimmer.zoom.get(); 
 }
 
 void ofx::fixture::States::DimmerSnapshot::recall( Dimmer & dimmer ){
     dimmer.dimmer = this->dimmer.get();
-    dimmer.zoom = this->zoom.get();
 }
 
 void ofx::fixture::States::DimmerSnapshot::mix( Dimmer & dimmer, DimmerSnapshot & other, float pct ){
     dimmer.dimmer = lerp( this->dimmer, other.dimmer, pct );
-    dimmer.zoom = lerp( this->zoom, other.zoom, pct );
 }
 
 void ofx::fixture::States::HeadSnapshot::init( Head & head ){
