@@ -36,4 +36,5 @@ class ofApp: public ofBaseApp{
 
         int transitioning;
         float cursor;
+        
 };

@@ -12,7 +12,9 @@ class Simulation {
 public:  
     Simulation();
 
+    void setStage();
     void setStage( float stageWidht, float stageHeight, float stageDepth );
+    
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
 
@@ -29,7 +31,6 @@ public:
     void toggleDrawAddress();
     
 private:
-    glm::vec3 stage;
 
     ofEasyCam camera;
     ofFbo fbo;

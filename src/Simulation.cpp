@@ -6,7 +6,7 @@ ofx::fixture::Simulation::Simulation(){
 
 
     // easy cam
-    camera.setPosition( glm::vec3(0.0f, 0.5f, 1.0f )); // up, front
+    camera.setPosition( glm::vec3(0.0f, 0.5f, 0.5f )); // up, front
     camera.setTarget( glm::vec3( 0.0f, 0.0f, 0.0f ) );
     
     setStage( 1600.0f, 800.0f, 1200.0f ); 
@@ -14,10 +14,12 @@ ofx::fixture::Simulation::Simulation(){
 }
 
 
+void ofx::fixture::Simulation::setStage(){
+    setStage( getBoundaries().x, getBoundaries().y, getBoundaries().z );
+}
+
 void ofx::fixture::Simulation::setStage( float stageWidht, float stageHeight, float stageDepth ){
 
-    stage = glm::vec3( stageWidht, stageHeight, stageDepth );
-        
     // walls
     floor.set( stageWidht, stageDepth );
     floor.setOrientation( glm::vec3(0,0,0) );
@@ -26,7 +28,7 @@ void ofx::fixture::Simulation::setStage( float stageWidht, float stageHeight, fl
     wall.set( stageWidht, stageHeight );
     wall.setPosition( 0, stageHeight*0.5f, -stageDepth*0.5f );
     
-    camera.setDistance( stageWidht );
+    camera.setDistance( getBoundaries().x*1.1f );
     // set scaling
 }
 
@@ -43,8 +45,6 @@ void ofx::fixture::Simulation::moveGraphics( int x, int y ){
 
 void ofx::fixture::Simulation::add( Head & head ){
     heads.push_back( &head );
-    head.position.set( head.position.getName(), head.position.get(), glm::vec3(0, 0, 0), stage ); 
-    head.target.set( head.target.getName(), head.target.get(), glm::vec3(0, 0, 0), stage ); 
 }
 
 void ofx::fixture::Simulation::add( Dimmer & dimmer ){
@@ -63,7 +63,7 @@ void ofx::fixture::Simulation::update(){
             camera.begin();
 
                 ofPushMatrix();
-                ofTranslate( -stage.x*0.5f, 0.0f, -stage.z*0.5f );
+                ofTranslate( -getBoundaries().x*0.5f, 0.0f, -getBoundaries().z*0.5f );
                 for( auto & head : heads ){
                     head->draw();
                 }
@@ -75,7 +75,7 @@ void ofx::fixture::Simulation::update(){
                 // draw lines in the floor borders
                 ofSetColor(0);
                 ofSetLineWidth( 2.0f );
-                ofDrawLine( 0, 0, 2, stage.x, 0, 2 ); 
+                ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
                 
                 ofPopMatrix();
 

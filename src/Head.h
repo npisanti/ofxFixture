@@ -13,6 +13,8 @@ class Head : public Dimmer {
 public:
     Head();
 
+    void setup( ofxDmx & dmx, int channel, int universe=1 ) override;
+
     void setTarget( glm::vec3 pos );
     void setColor( const ofColor & color, bool alphaAsWhite=false );
 

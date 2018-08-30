@@ -2,7 +2,36 @@
 #include "States.h"
 
 ofx::fixture::States::States(){
+    
     bTouching = false;
+    
+    multiple.parameters.setName("update multiple");
+    multiple.headsSelector.setName( "select heads" );
+    multiple.headsSelector.add( multiple.selectAllHeads.set("select all", false) );
+    multiple.parameters.add( multiple.headsSelector );
+    multiple.dimmersSelector.setName( "select dimmers" );
+    multiple.dimmersSelector.add( multiple.selectAllDimmers.set("select all", false) );
+    multiple.parameters.add( multiple.dimmersSelector );
+
+    multiple.parameters.add( multiple.dimmer.set("dimmer", 0.0f, 0.0f, 1.0f) );
+    multiple.parameters.add( multiple.zoom.set("zoom", 0.0f, 0.0f, 1.0f) );
+    multiple.parameters.add( multiple.red.set("red", 255.0f, 0.0f, 255.0f) );
+    multiple.parameters.add( multiple.green.set("green", 255.0f, 0.0f, 255.0f) );
+    multiple.parameters.add( multiple.blue.set("blue", 255.0f, 0.0f, 255.0f) );
+    multiple.parameters.add( multiple.white.set("white", 255.0f, 0.0f, 255.0f) );
+    
+    multiple.selectAllHeads.addListener( this, &States::onSelectAllHeads );
+    multiple.selectAllDimmers.addListener( this, &States::onSelectAllDimmers );
+    
+    multiple.dimmer.addListener( this, &States::onDimmerChange );
+    multiple.zoom.addListener( this, &States::onZoomChange );
+    multiple.red.addListener( this, &States::onColorChange );
+    multiple.green.addListener( this, &States::onColorChange );
+    multiple.blue.addListener( this, &States::onColorChange );
+    multiple.white.addListener( this, &States::onColorChange );
+    
+    bTargetAdded = false;
+    
 }
 
 
@@ -138,6 +167,10 @@ void ofx::fixture::States::add( Dimmer & dimmer ){
     destination.dimmers.emplace_back();
     destination.dimmers.back().init( dimmer );
     destination.system.add( destination.dimmers.back().parameters );
+    
+    multiple.bDimmers.emplace_back();
+    multiple.bDimmers.back().set( dimmer.parameters.getName(), false );
+    multiple.dimmersSelector.add( multiple.bDimmers.back() );
 }
 
 void ofx::fixture::States::add( Head & head ){
@@ -151,6 +184,16 @@ void ofx::fixture::States::add( Head & head ){
     destination.heads.emplace_back();
     destination.heads.back().init( head );
     destination.system.add( destination.heads.back().parameters );
+    
+    multiple.bHeads.emplace_back();
+    multiple.bHeads.back().set( head.parameters.getName(), false );
+    multiple.headsSelector.add( multiple.bHeads.back() );
+    
+    if(!bTargetAdded){
+        multiple.parameters.add( multiple.target.set("target", glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), getBoundaries()));
+        multiple.target.addListener( this, &States::onTargetChange );
+        bTargetAdded = true;
+    }
 }
     
 void ofx::fixture::States::DimmerSnapshot::init( Dimmer & dimmer ){
@@ -273,3 +316,47 @@ void ofx::fixture::States::HeadSnapshot::mix( Head & head, HeadSnapshot & other,
     }
     for( size_t i = 0; i<bOptions.size(); ++i ){ head.bOptionals[i]->set( bOptions[i].get()); }
 }
+
+
+void ofx::fixture::States::onSelectAllHeads( bool & value ){
+    for( auto & flag : multiple.bHeads ){ flag = value; }
+}
+
+void ofx::fixture::States::onSelectAllDimmers( bool & value ){
+    for( auto & flag : multiple.bDimmers ){ flag = value; }
+}
+
+
+void ofx::fixture::States::onDimmerChange( float & value ){
+    for( size_t i=0; i<dimmers.size(); ++i ){
+        if( multiple.bDimmers[i] ){ dimmers[i]->dimmer = value; }
+    }
+    for( size_t i=0; i<heads.size(); ++i ){
+        if( multiple.bHeads[i] ){ heads[i]->dimmer = value; }
+    }
+}
+
+void ofx::fixture::States::onZoomChange( float & value ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        if( multiple.bHeads[i] ){ heads[i]->zoom = value; }
+    }
+}
+
+void ofx::fixture::States::onColorChange( float & value ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        if( multiple.bHeads[i] ){ 
+            heads[i]->red = multiple.red; 
+            heads[i]->green = multiple.green; 
+            heads[i]->blue = multiple.blue; 
+            heads[i]->white = multiple.white; 
+        }
+    }
+}
+
+
+void ofx::fixture::States::onTargetChange( glm::vec3 & value ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        if( multiple.bHeads[i] ){ heads[i]->target = value; }
+    }
+}
+

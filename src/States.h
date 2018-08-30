@@ -30,7 +30,24 @@ public:
     void storeDestination();    
     void transition( float pct ); // from origin to destination
     
-private:
+    struct MultipleUpdater{
+        ofParameterGroup parameters;
+            ofParameterGroup headsSelector;
+                ofParameter<bool> selectAllHeads;            
+                std::vector<ofParameter<bool>> bHeads;
+            ofParameterGroup dimmersSelector;            
+                ofParameter<bool> selectAllDimmers;
+                std::vector<ofParameter<bool>> bDimmers;
+            ofParameter<float> dimmer;
+            ofParameter<float> zoom;
+            ofParameter<float> red;
+            ofParameter<float> green;
+            ofParameter<float> blue;
+            ofParameter<float> white;
+            ofParameter<glm::vec3> target;
+    } multiple;
+    
+private: // ---------------------------------------------------------
 
     static inline float lerp( const ofParameter<float> & x0, const ofParameter<float> & x1, float pct ){
         return x0.get()*(1.0f-pct) + x1.get()*pct;
@@ -90,6 +107,14 @@ private:
     
     bool bTouching;
     
+    void onSelectAllHeads( bool & value );
+    void onSelectAllDimmers( bool & value );
+    void onZoomChange( float & value );
+    void onColorChange( float & value );
+    void onDimmerChange( float & value );
+    void onTargetChange( glm::vec3 & value );
+    
+    bool bTargetAdded;
 };
     
     

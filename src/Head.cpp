@@ -44,11 +44,16 @@ ofx::fixture::Head::Head(){
 
     parameters.add( chaseTarget.set("chase target", true) );    
     target.addListener( this, &Head::onTargetChange);
-    parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(-600, -600, -600), glm::vec3(600, 600, 600) ) );
+    parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     
     fOptionals.clear();
     iOptionals.clear();
     bOptionals.clear();
+}
+
+void ofx::fixture::Head::setup( ofxDmx & dmx, int channel, int universe ) {
+    target.set( target.getName(), target.get(), glm::vec3(0, 0, 0), boundaries );  
+    Dimmer::setup( dmx, channel, universe );
 }
 
 void ofx::fixture::Head::setColor( const ofColor & color, bool alphaAsWhite ){
@@ -99,7 +104,7 @@ void ofx::fixture::Head::draw(){
     
     if(chaseTarget){
         // draw target
-        ofSetColor( color ); // use fixture light color
+        ofSetColor( color, 255*dimmer ); // use fixture light color
         ofDrawSphere( target, 5 );
         ofDrawLine( node.getPosition(), target ); 
     }

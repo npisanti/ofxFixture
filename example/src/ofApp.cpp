@@ -17,11 +17,15 @@ void ofApp::setup(){
    
     // stage dimensions, I like to think it as centimeters
     float sw = 1200.0f;
-    float sh = 500.0f;
+    float sh = 600.0f;
     float sd = 800.0f;
     
-    simulation.setStage( sw, sh, sd );
-    simulation.setGraphics( 20, 20, 760, 760 );
+    // boundaries for fixtures position and targets
+    ofx::fixture::setBoundaries( glm::vec3( sw, sh, sd) );
+    
+
+    simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries
+    simulation.setGraphics( 20, 20, 900, 800 );
     simulation.setDrawAddress( true );
     
     
@@ -67,6 +71,11 @@ void ofApp::setup(){
     // adds misc parameters to gui ----------------------------------
     gui.add( ofx::fixture::Dimmer::bDrawAddress ); // static ofParameter<bool>
     gui.add( bTargetDemo.set("target demo", true) );
+    
+    gui.add( states.multiple.parameters );
+    gui.minimizeAll();
+    
+    positions.minimizeAll();
 
 }
 
