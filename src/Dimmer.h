@@ -53,6 +53,7 @@ private:
 
 const glm::vec3 & getBoundaries();
 void setBoundaries( glm::vec3 dimensions );
+void setBoundaries( float w, float h, float d  );
     
 }}
 

@@ -21,7 +21,7 @@ void ofApp::setup(){
     float sd = 800.0f;
     
     // boundaries for fixtures position and targets
-    ofx::fixture::setBoundaries( glm::vec3( sw, sh, sd) );
+    ofx::fixture::setBoundaries( sw, sh, sd );
     
 
     simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries

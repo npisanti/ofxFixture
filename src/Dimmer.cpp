@@ -61,3 +61,4 @@ const glm::vec3 & ofx::fixture::Dimmer::getBoundaries(){ return boundaries; }
 
 const glm::vec3 & ofx::fixture::getBoundaries(){ return Dimmer::getBoundaries(); }
 void ofx::fixture::setBoundaries( glm::vec3 dimensions  ){ Dimmer::setBoundaries( dimensions ); }
+void ofx::fixture::setBoundaries( float w, float h, float d  ){ Dimmer::setBoundaries( w, h, d ); }
