@@ -5,7 +5,7 @@ ofx::fixture::Head::Head(){
 
     //  object init
     tiltMin = 0; 
-    tiltMax = 180;
+    tiltMax = 360;
     panMin = 0; 
     panMax = 360;
     
@@ -18,17 +18,20 @@ ofx::fixture::Head::Head(){
       
     box.setParent(node);
     box.setPosition( 0, -15, 0 );
-    box.set( 40, 10, 40 );
+    box.set( 30, 10, 30 );
 
     label.setParent(node);
     label.setPosition(0, -15, 20);
     label.set( 20, 3, 1 );
     
     spot.setResolution( 16, 4 );
-    spot.set( 10, 30 );
+    spot.set( 10, 40 );
     
     spot.setParent( head );
-    spot.rotateDeg( 90.0f, glm::vec3( 1, 0, 0) );
+    tip.setParent( spot );
+    tip.setPosition( 0, -20, 0 );
+    tip.set( 12, 4 );
+
     
     parameters.add( zoom.set("zoom", 0.0f, 0.0f, 1.0f) );
     
@@ -94,20 +97,21 @@ void ofx::fixture::Head::draw(){
     ofColor color( red, green, blue );
 
     // draw spot spot
-    ofSetColor(ofColor::white);
+    ofSetColor( 100 );
     spot.draw();
 
-    ofSetColor( color, 120 );
+    ofSetColor( color*dimmer, 120 );     
     box.draw();
-    ofSetColor( color ); // this should be of the light color
+
+    ofSetColor( color*dimmer );  
     label.draw();
+    tip.draw();
     
     if(chaseTarget){
-        // draw target
-        ofSetColor( color, 255*dimmer ); // use fixture light color
         ofDrawSphere( target, 5 );
         ofDrawLine( node.getPosition(), target ); 
     }
+    
     if( bDrawAddress ){
         ofSetColor( 255);    
         ofDrawBitmapString( address, node.getPosition());             
@@ -211,6 +215,7 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     theta = (d1*d1 + d3*d3 - d2*d2) / (2 * d1 * d3);
     float angle = acos(theta) * (180/PI);
     
+    angle += 90.0f;
     
     // change this with optimization for nearest point in range
     if( angle >= tiltMin && angle <= tiltMax)
@@ -219,7 +224,11 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     }
     else
     {
-        return 0;
+        if( angle >= tiltMin ) { 
+            return tiltMax; 
+        }else{
+            return tiltMin;
+        }
     }
 }
 

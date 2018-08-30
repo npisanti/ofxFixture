@@ -353,10 +353,11 @@ void ofx::fixture::States::onColorChange( float & value ){
     }
 }
 
-
 void ofx::fixture::States::onTargetChange( glm::vec3 & value ){
     for( size_t i=0; i<heads.size(); ++i ){
-        if( multiple.bHeads[i] ){ heads[i]->target = value; }
+        if( multiple.bHeads[i] ){
+            heads[i]->target = value; 
+            heads[i]->chaseTarget = true;
+        }
     }
 }
-

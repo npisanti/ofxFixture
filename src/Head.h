@@ -59,6 +59,7 @@ private:
     ofBoxPrimitive box;
     ofBoxPrimitive label;
     ofCylinderPrimitive spot;
+    ofCylinderPrimitive tip;
 
     void onTargetChange( glm::vec3 & value );
 
@@ -73,5 +74,3 @@ private:
 };
 
 }}
-
-
