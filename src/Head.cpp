@@ -25,11 +25,12 @@ ofx::fixture::Head::Head(){
     label.set( 20, 3, 1 );
     
     spot.setResolution( 16, 4 );
-    spot.set( 10, 40 );
-    
+    spot.set( 10, 25 );
+    spot.setPosition( 0, -5, 0 );
+        
     spot.setParent( head );
     tip.setParent( spot );
-    tip.setPosition( 0, -20, 0 );
+    tip.setPosition( 0, -15, 0 );
     tip.set( 12, 4 );
 
     
@@ -42,10 +43,10 @@ ofx::fixture::Head::Head(){
     color.add( white.set("white", 0.0f, 0.0f, 255.0f) );
     parameters.add( color );
     
-    parameters.add( pan.set("pan", 0.0f, panMin, panMax) );
+    parameters.add( pan.set("pan", 90.0f, panMin, panMax) );
     parameters.add( tilt.set("tilt", 0.0f, tiltMin, tiltMax) );
 
-    parameters.add( chaseTarget.set("chase target", true) );    
+    parameters.add( chaseTarget.set("chase target", false) );    
     target.addListener( this, &Head::onTargetChange);
     parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     

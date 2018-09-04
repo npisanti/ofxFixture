@@ -306,7 +306,7 @@ void ofx::fixture::States::HeadSnapshot::mix( Head & head, HeadSnapshot & other,
     head.white = lerp( white, other.white, pct );
     head.pan = lerp( pan, other.pan, pct );
     head.tilt = lerp( tilt, other.tilt, pct );
-    head.chaseTarget = chaseTarget.get();
+    head.chaseTarget = other.chaseTarget.get();
     head.target = glm::mix( target.get(), other.target.get(), pct );
     for( size_t i = 0; i<fOptions.size(); ++i ){ 
         head.fOptionals[i]->set( lerp(fOptions[i].get(), other.fOptions[i].get(), pct) ); 
