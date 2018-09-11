@@ -28,6 +28,8 @@ public:
 
     ofParameter<float> pan;
     ofParameter<float> tilt;
+    
+    ofParameterGroup extras;
 
     ofParameter<bool> chaseTarget;
     ofParameter<glm::vec3> target;
@@ -43,14 +45,18 @@ protected: // to be called from subclasses
     // specificationCh is the channel in the fixture's dmx specifation
     void setDmx( int specificationCh, int value );
 
+    void setDmxDimmer16bit( int coarseChannel, int fineChannel );
+    void setDmxPan16bit( int coarseChannel, int fineChannel, bool reverse = false  );
+    void setDmxTilt16bit( int coarseChannel, int fineChannel, bool reverse = false  );
+
     // those have to be used in the constructor 
     void setPanRange( float min, float max );
     void setTiltRange( float min, float max );
     
     // adds a custom ofParameter to snapshot management 
-    void addOptional( ofParameter<float> & parameter );
-    void addOptional( ofParameter<int> & parameter );
-    void addOptional( ofParameter<bool> & parameter );
+    void addExtra( ofParameter<float> & parameter );
+    void addExtra( ofParameter<int> & parameter );
+    void addExtra( ofParameter<bool> & parameter );
     
 private:
     float panMin, panMax, tiltMin, tiltMax;
@@ -70,6 +76,8 @@ private:
     std::vector<ofParameter<float>*> fOptionals; 
     std::vector<ofParameter<int>*>   iOptionals;
     std::vector<ofParameter<bool>*>  bOptionals;
+    
+    bool bHasExtra;
     
 };
 

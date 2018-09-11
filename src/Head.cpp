@@ -3,11 +3,13 @@
 
 ofx::fixture::Head::Head(){
 
-    //  object init
-    tiltMin = 0; 
-    tiltMax = 360;
-    panMin = 0; 
-    panMax = 360;
+    bHasExtra = false;
+    
+    // object init
+    tiltMin = -180; 
+    tiltMax = 180;
+    panMin = -180; 
+    panMax = 180;
     
     // default orientation
     orientation = glm::vec3( 180, 180, 0);
@@ -29,6 +31,7 @@ ofx::fixture::Head::Head(){
     spot.setPosition( 0, -5, 0 );
         
     spot.setParent( head );
+    spot.tiltDeg(180);
     tip.setParent( spot );
     tip.setPosition( 0, -15, 0 );
     tip.set( 12, 4 );
@@ -43,8 +46,8 @@ ofx::fixture::Head::Head(){
     color.add( white.set("white", 0.0f, 0.0f, 255.0f) );
     parameters.add( color );
     
-    parameters.add( pan.set("pan", 90.0f, panMin, panMax) );
-    parameters.add( tilt.set("tilt", 0.0f, tiltMin, tiltMax) );
+    parameters.add( pan.set("pan", 0.0f, panMin, panMax) );
+    parameters.add( tilt.set("tilt", 90.0f, tiltMin, tiltMax) );
 
     parameters.add( chaseTarget.set("chase target", false) );    
     target.addListener( this, &Head::onTargetChange);
@@ -58,6 +61,11 @@ ofx::fixture::Head::Head(){
 void ofx::fixture::Head::setup( ofxDmx & dmx, int channel, int universe ) {
     target.set( target.getName(), target.get(), glm::vec3(0, 0, 0), boundaries );  
     Dimmer::setup( dmx, channel, universe );
+    dimmer.setName("dimmer");
+    if( bHasExtra ){
+        extras.setName("extras");
+        parameters.add( extras );
+    }
 }
 
 void ofx::fixture::Head::setColor( const ofColor & color, bool alphaAsWhite ){
@@ -92,7 +100,7 @@ void ofx::fixture::Head::update(){
 void ofx::fixture::Head::draw(){
 
     head.setOrientation( glm::vec3(0,0,0) );
-    head.panDeg( pan-90 );
+    head.panDeg( pan );
     head.tiltDeg( tilt );
 
     ofColor color( red, green, blue );
@@ -122,6 +130,39 @@ void ofx::fixture::Head::draw(){
 
 void ofx::fixture::Head::setDmx( int specificationCh, int value ){
     dmx->setLevel( specificationCh-1 + channel, value, universe );
+}
+
+
+void ofx::fixture::Head::setDmxDimmer16bit( int coarseChannel, int fineChannel ){
+	int dim = dimmer * 65535;
+	int dim0 = (dim >> 8) & 0x00ff;
+	int dim1 =  dim       & 0x00ff;
+	dmx->setLevel( channel+coarseChannel-1, dim0,	universe );		
+	dmx->setLevel( channel+fineChannel-1, 	dim1,	universe );		
+}
+
+void ofx::fixture::Head::setDmxPan16bit( int coarseChannel, int fineChannel, bool reverse ){
+    int value;
+    switch( reverse ){
+        case false: value = ofMap( pan, panMin, panMax, 65535, 0 ); break;
+        case true:  value = ofMap( pan, panMin, panMax, 0, 65535 ); break;
+    }
+    int coarse = (value >> 8) & 0x00ff;
+    int fine =    value       & 0x00ff;
+    dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
+	dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
+}
+
+void ofx::fixture::Head::setDmxTilt16bit( int coarseChannel, int fineChannel, bool reverse ){
+    int value;
+    switch( reverse ){
+        case false: value = ofMap( tilt, tiltMin, tiltMax, 0, 65535 ); break;
+        case true:  value = ofMap( tilt, tiltMin, tiltMax, 65535, 0 ); break;
+    }
+    int coarse = (value >> 8) & 0x00ff;
+    int fine =    value       & 0x00ff;
+    dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
+	dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
 }
 
 
@@ -184,26 +225,46 @@ float ofx::fixture::Head::panAngle( glm::vec3 v){
     float angle = acos(theta) * (180.0f/PI);
     
     if( v3.x == 0) {
-        angle = 90.0f;
+        angle = 0.0f;
         return angle;
     }
     
     if(v3.x <= 0.f && v3.y <= 0.f) {
-        angle = abs(angle-90.f) + 90.f;
+        angle = abs(angle-90.f);
     } else if(v3.x <= 0.f && v3.y >= 0.f) {
-        angle = angle + 180.f;
+        angle = angle + 90.f;
     } else if(v3.x >= 0.f && v3.y >= 0.f) {
-        angle = abs(angle-90.f) + 270.f;
+        angle = abs(angle-90.f) - 180.f;
+    }else{
+        angle = angle - 90.0f;
+    }
+
+    //--calculate nearest angle to actual pan and check boundaries---
+    float mindist = abs( pan-angle );
+    float minangle = angle;
+    
+    float angledown = angle - 360.0f;
+    while( angledown > panMin ){
+        float dist = abs( pan-angledown );
+        if( dist < mindist ){
+            mindist = dist;
+            minangle = angledown;
+        }
+        angledown -= 360.0f;
     }
     
-    if( angle >= panMin && angle <= panMax )
-    {
-        return angle;
+    float angleup = angle + 360.0f;
+    while( angleup < panMax ){
+        float dist = abs( pan-angleup );
+        if( dist < mindist ){
+            mindist = dist;
+            minangle = angleup;
+        }
+        angleup += 360.0f;
     }
-    else
-    {
-        return 0;
-    }
+    
+    return minangle;
+
 }
 
 float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
@@ -216,7 +277,7 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     theta = (d1*d1 + d3*d3 - d2*d2) / (2 * d1 * d3);
     float angle = acos(theta) * (180/PI);
     
-    angle += 90.0f;
+    angle -= 90.0f;
     
     // change this with optimization for nearest point in range
     if( angle >= tiltMin && angle <= tiltMax)
@@ -233,14 +294,21 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     }
 }
 
-void ofx::fixture::Head::addOptional( ofParameter<float> & parameter ){
+void ofx::fixture::Head::addExtra( ofParameter<float> & parameter ){
+    extras.add( parameter );
     fOptionals.push_back( &parameter );
+    bHasExtra = true;
 }
 
-void ofx::fixture::Head::addOptional( ofParameter<int> & parameter ){
+void ofx::fixture::Head::addExtra( ofParameter<int> & parameter ){
+    extras.add( parameter );
     iOptionals.push_back( &parameter );
+    bHasExtra = true;
 }
 
-void ofx::fixture::Head::addOptional( ofParameter<bool> & parameter ){
+void ofx::fixture::Head::addExtra( ofParameter<bool> & parameter ){
+    extras.add( parameter );
     bOptionals.push_back( &parameter );
+    bHasExtra = true;
 }
+

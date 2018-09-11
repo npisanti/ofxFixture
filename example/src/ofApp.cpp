@@ -58,7 +58,7 @@ void ofApp::setup(){
         simulation.add( dimmer ); 
         states.add( dimmer );
         positions.add( dimmer.installation );
-        gui.add( dimmer.parameters );
+        gui.add( dimmer.dimmer ); // dimmers have just one parameter, so we add that
     }
 
     // ------------------ states ------------------------------------

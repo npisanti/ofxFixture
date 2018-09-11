@@ -5,12 +5,11 @@
 #include "ofxGui.h"
 
 
-class DmxChannel {
+class DmxValue {
 public:
     ofParameterGroup & setup( std::string name ){
         parameters.setName( name );
         parameters.add( bActive.set("send dmx", false) );
-        parameters.add( channel.set( "channel", 1, 1, 512 ) );
         parameters.add( value.set(   "value "  ,    0,   0, 255 ) );
 
         parameters.add( autoCycle.set("auto cycle", false) );
@@ -21,7 +20,7 @@ public:
         return parameters;
     }
     
-    void update( ofxDmx & dmx ){
+    void update( ofxDmx & dmx, int channel ){
         if(bActive){
             if (autoCycle) { 
                 value = ofMap( sin( ofGetElapsedTimef()*speed ), -1.0f, 1.0f, minval, maxval ); 
@@ -34,7 +33,6 @@ public:
 
     ofParameterGroup parameters;
         ofParameter<bool> bActive;
-        ofParameter<int> channel;
         ofParameter<int> value;
         ofParameter<int> minval;
         ofParameter<int> maxval;
@@ -55,5 +53,9 @@ public:
     
     ofxPanel panel;
 
-    std::vector<DmxChannel> channels;
+    std::vector<DmxValue> values;
+    ofParameterGroup channelsGroup;
+    ofParameter<int> fixtureChannel;
+    std::vector<ofParameter<int>> channels;
+    
 };

@@ -7,8 +7,8 @@ ofx::fixture::Vendor::TestHead::TestHead(){
     
     
     // also set pan and tilt ranges
-    setPanRange( 0, 360 );
-    setTiltRange( -180, 180 );
+    setPanRange( -225, 225 );
+    setTiltRange( -150, 150 );
 }
 
 std::string ofx::fixture::Vendor::TestHead::fixtureName(){
@@ -16,11 +16,11 @@ std::string ofx::fixture::Vendor::TestHead::fixtureName(){
 }
 
 void ofx::fixture::Vendor::TestHead::init(){
-    // send init dmx values here with sendDmx()
+    // send init dmx values here with setDmx()
     
 }
 
 void ofx::fixture::Vendor::TestHead::update(){
-    // send dmx values here with sendDmx()
+    // send dmx values here with setDmx()
 
 }

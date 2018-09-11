@@ -36,6 +36,7 @@ void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe ){
     address = "u"+ofToString(universe) + "ch" + ofToString(channel);
     
     parameters.setName( address+" " + fixtureName() );
+    dimmer.setName( address+" " + fixtureName() );
     installation.setName( "pos "+address+" " + fixtureName());
     
     // update to boundaries
