@@ -201,18 +201,46 @@ void ofx::fixture::States::DimmerSnapshot::init( Dimmer & dimmer ){
     
     this->dimmer.set( dimmer.dimmer.getName(), dimmer.dimmer.get(), dimmer.dimmer.getMin(), dimmer.dimmer.getMax() );
     parameters.add( this->dimmer );
+    
+    fOptions.resize( dimmer.fOptionals.size() );
+    for( size_t i = 0; i<fOptions.size(); ++i ){
+        fOptions[i].set( dimmer.fOptionals[i]->getName(), dimmer.fOptionals[i]->get(), dimmer.fOptionals[i]->getMin(), dimmer.fOptionals[i]->getMax());
+    }
+    
+    iOptions.resize( dimmer.iOptionals.size() );
+    for( size_t i = 0; i<iOptions.size(); ++i ){
+        iOptions[i].set( dimmer.iOptionals[i]->getName(), dimmer.iOptionals[i]->get(), dimmer.iOptionals[i]->getMin(), dimmer.iOptionals[i]->getMax());
+    }
+    
+    bOptions.resize( dimmer.bOptionals.size() );
+    for( size_t i = 0; i<bOptions.size(); ++i ){
+        bOptions[i].set( dimmer.bOptionals[i]->getName(), dimmer.bOptionals[i]->get(), dimmer.bOptionals[i]->getMin(), dimmer.bOptionals[i]->getMax());
+    }
 }
 
 void ofx::fixture::States::DimmerSnapshot::store( Dimmer & dimmer ){
     this->dimmer = dimmer.dimmer.get();
+    for( size_t i = 0; i<fOptions.size(); ++i ){ fOptions[i] = dimmer.fOptionals[i]->get(); }
+    for( size_t i = 0; i<iOptions.size(); ++i ){ iOptions[i] = dimmer.iOptionals[i]->get(); }
+    for( size_t i = 0; i<bOptions.size(); ++i ){ bOptions[i] = dimmer.bOptionals[i]->get(); }
 }
 
 void ofx::fixture::States::DimmerSnapshot::recall( Dimmer & dimmer ){
     dimmer.dimmer = this->dimmer.get();
+    for( size_t i = 0; i<fOptions.size(); ++i ){ dimmer.fOptionals[i]->set( fOptions[i].get()); }
+    for( size_t i = 0; i<iOptions.size(); ++i ){ dimmer.iOptionals[i]->set( iOptions[i].get()); }
+    for( size_t i = 0; i<bOptions.size(); ++i ){ dimmer.bOptionals[i]->set( bOptions[i].get()); }
 }
 
 void ofx::fixture::States::DimmerSnapshot::mix( Dimmer & dimmer, DimmerSnapshot & other, float pct ){
     dimmer.dimmer = lerp( this->dimmer, other.dimmer, pct );
+    for( size_t i = 0; i<fOptions.size(); ++i ){ 
+        dimmer.fOptionals[i]->set( lerp(fOptions[i].get(), other.fOptions[i].get(), pct) ); 
+    }
+    for( size_t i = 0; i<iOptions.size(); ++i ){ 
+        dimmer.iOptionals[i]->set( lerp( float(iOptions[i].get()), float(other.iOptions[i].get()), pct ) ); 
+    }
+    for( size_t i = 0; i<bOptions.size(); ++i ){ dimmer.bOptionals[i]->set( bOptions[i].get()); }
 }
 
 void ofx::fixture::States::HeadSnapshot::init( Head & head ){

@@ -18,8 +18,7 @@ public:
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
 
-    void add( Head & head );
-    void add( Dimmer & dimmer );   
+    void add( Dimmer & fixt ); 
     
     virtual void drawObjects(){};
     
@@ -42,8 +41,7 @@ private:
     
     ofMaterial material;
 
-    std::vector<Dimmer*> dimmers;
-    std::vector<Head*>   heads;
+    std::vector<Dimmer*> fixtures;
     
     int gx;
     int gy;

@@ -8,7 +8,7 @@ namespace ofx { namespace fixture {
 class States;
 
 class Head : public Dimmer {
-    friend class States;
+
     
 public:
     Head();
@@ -28,8 +28,6 @@ public:
 
     ofParameter<float> pan;
     ofParameter<float> tilt;
-    
-    ofParameterGroup extras;
 
     ofParameter<bool> chaseTarget;
     ofParameter<glm::vec3> target;
@@ -39,8 +37,8 @@ public:
     void update() override;
     void draw() override;
     
-    void enableLight();
-    void disableLight();
+    void enableLight() override;
+    void disableLight() override;
     
     // call this to send messages on exit
     virtual void close(){}
@@ -50,57 +48,46 @@ protected: // to be called from subclasses
     // those have to be used in the constructor 
     void setPanRange( float min, float max );
     void setTiltRange( float min, float max );
-
     
-    // adds a custom ofParameter to snapshot management 
-    void addExtra( ofParameter<float> & parameter );
-    void addExtra( ofParameter<int> & parameter );
-    void addExtra( ofParameter<bool> & parameter );
-
-    
-    // specificationCh is the channel in the fixture's dmx specifation
-    void setDmx( int specificationCh, int value ){
-        dmx->setLevel( specificationCh-1 + channel, value, universe );
-    }
 
     void setDmxDimmer16bit( int coarseChannel, int fineChannel ){
         int dim = dimmer * 65535;
         int dim0 = (dim >> 8) & 0x00ff;
         int dim1 =  dim       & 0x00ff;
-        dmx->setLevel( channel+coarseChannel-1, dim0,	universe );		
-        dmx->setLevel( channel+fineChannel-1, 	dim1,	universe );		
+        setDmx( coarseChannel, dim0 );
+        setDmx( fineChannel, dim1 );	
     }
 
     void setDmxPan16bit( int coarseChannel, int fineChannel){
         int value = ofMap( pan, panMin, panMax, 65535, 0 );
         int coarse = (value >> 8) & 0x00ff;
         int fine =    value       & 0x00ff;
-        dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-        dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
+        setDmx( coarseChannel, coarse );
+        setDmx( fineChannel, fine );
     }
 
     void setDmxPan16bitReversed( int coarseChannel, int fineChannel){
         int value = ofMap( pan, panMin, panMax, 0, 65535 );
         int coarse = (value >> 8) & 0x00ff;
         int fine =    value       & 0x00ff;
-        dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-        dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
+        setDmx( coarseChannel, coarse );
+        setDmx( fineChannel, fine );
     }
 
     void setDmxTilt16bit( int coarseChannel, int fineChannel ){
         int value = ofMap( tilt, tiltMin, tiltMax, 0, 65535 ); 
         int coarse = (value >> 8) & 0x00ff;
         int fine =    value       & 0x00ff;
-        dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-        dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
+        setDmx( coarseChannel, coarse );
+        setDmx( fineChannel, fine );
     }
 
     void setDmxTilt16bitReversed( int coarseChannel, int fineChannel ){
         int value = ofMap( tilt, tiltMin, tiltMax, 65535, 0 );
         int coarse = (value >> 8) & 0x00ff;
         int fine =    value       & 0x00ff;
-        dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-        dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
+        setDmx( coarseChannel, coarse );
+        setDmx( fineChannel, fine );
     }
 
 
@@ -129,13 +116,7 @@ private:
     void setOrientation( float tilt, float pan );
     float panAngle( glm::vec3 v);
     float tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
-        
-    std::vector<ofParameter<float>*> fOptionals; 
-    std::vector<ofParameter<int>*>   iOptionals;
-    std::vector<ofParameter<bool>*>  bOptionals;
-    
-    bool bHasExtra;
-    
+
 };
 
 }}

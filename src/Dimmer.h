@@ -7,7 +7,8 @@
 namespace ofx { namespace fixture { 
 
 class Dimmer {
-
+    friend class States;
+    
 public:
     Dimmer();
     
@@ -18,28 +19,39 @@ public:
     virtual void update();
     virtual void draw();
     
+    // enable and disable lights here, used by simulation
+    virtual void enableLight(){}
+    virtual void disableLight(){};
+    
+    
     ofParameterGroup installation;
     ofParameter<glm::vec3> position;
     ofParameter<glm::vec3> orientation;
 
     ofParameterGroup parameters;
     ofParameter<float> dimmer;
+    ofParameterGroup options;
+    
     
     static ofParameter<bool> bDrawAddress;
     
     
     static void setBoundaries( glm::vec3 dimensions );
-
     static void setBoundaries( float w, float h, float d );
-    
     static const glm::vec3 & getBoundaries();
 
 
 protected:
-	int channel;
-	int universe;
-    ofxDmx * dmx;
-    
+    // specificationCh is the channel in the fixture's dmx specifation
+    inline void setDmx( int specificationCh, int value ){
+        dmx->setLevel( specificationCh-1 + channel, value, universe );
+    }
+
+    // adds a custom ofParameter to snapshot management 
+    void addOption( ofParameter<float> & parameter );
+    void addOption( ofParameter<int> & parameter );
+    void addOption( ofParameter<bool> & parameter );
+
     ofNode node; 
     
     std::string address;
@@ -47,8 +59,18 @@ protected:
     static glm::vec3 boundaries;
 
 private: 
+	int channel;
+	int universe;
+    ofxDmx * dmx;
+
     void onPositionChanged( glm::vec3 & value );
     void onOrientationChanged( glm::vec3 & value );
+            
+    std::vector<ofParameter<float>*> fOptionals; 
+    std::vector<ofParameter<int>*>   iOptionals;
+    std::vector<ofParameter<bool>*>  bOptionals;
+    bool bHasOptions;
+
 };    
 
 const glm::vec3 & getBoundaries();

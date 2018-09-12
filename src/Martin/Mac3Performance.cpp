@@ -5,11 +5,11 @@ ofx::fixture::Martin::Mac3Performance::Mac3Performance(){
     setPanRange( -270, 270 );
     setTiltRange( -134, 134 );
     
-    addExtra( temperature.set("color temperature", 0.0f, 0.0f, 1.0f) );
-    addExtra( focus.set("focus", 0.1f, 0.0f, 1.0f) );
-    addExtra( goboSelect.set("gobo select", 0, 0, 5) );
-    addExtra( goboRotate.set("gobo rotate", 0.0f, 0.0f, 1.0f) );
-    addExtra( goboAnimate.set("gobo animate", 0.0f, 0.0f, 1.0f) );
+    addOption( temperature.set("color temperature", 0.0f, 0.0f, 1.0f) );
+    addOption( focus.set("focus", 0.1f, 0.0f, 1.0f) );
+    addOption( goboSelect.set("gobo select", 0, 0, 5) );
+    addOption( goboRotate.set("gobo rotate", 0.0f, 0.0f, 1.0f) );
+    addOption( goboAnimate.set("gobo animate", 0.0f, 0.0f, 1.0f) );
 }
 
 std::string ofx::fixture::Martin::Mac3Performance::fixtureName(){

@@ -3,8 +3,6 @@
 
 ofx::fixture::Head::Head(){
 
-    bHasExtra = false;
-    
     // object init
     tiltMin = -180; 
     tiltMax = 180;
@@ -64,20 +62,13 @@ ofx::fixture::Head::Head(){
     parameters.add( chaseTarget.set("chase target", false) );    
     target.addListener( this, &Head::onTargetChange);
     parameters.add( target.set("target", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
-    
-    fOptionals.clear();
-    iOptionals.clear();
-    bOptionals.clear();
+
 }
 
 void ofx::fixture::Head::setup( ofxDmx & dmx, int channel, int universe ) {
     target.set( target.getName(), target.get(), glm::vec3(0, 0, 0), boundaries );  
     Dimmer::setup( dmx, channel, universe );
     dimmer.setName("dimmer");
-    if( bHasExtra ){
-        extras.setName("extras");
-        parameters.add( extras );
-    }
 }
 
 void ofx::fixture::Head::setColor( const ofColor & color, bool alphaAsWhite ){
@@ -287,24 +278,6 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
             return tiltMin;
         }
     }
-}
-
-void ofx::fixture::Head::addExtra( ofParameter<float> & parameter ){
-    extras.add( parameter );
-    fOptionals.push_back( &parameter );
-    bHasExtra = true;
-}
-
-void ofx::fixture::Head::addExtra( ofParameter<int> & parameter ){
-    extras.add( parameter );
-    iOptionals.push_back( &parameter );
-    bHasExtra = true;
-}
-
-void ofx::fixture::Head::addExtra( ofParameter<bool> & parameter ){
-    extras.add( parameter );
-    bOptionals.push_back( &parameter );
-    bHasExtra = true;
 }
 
 void ofx::fixture::Head::setSimulationConcentration( float value ){

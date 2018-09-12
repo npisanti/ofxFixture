@@ -61,6 +61,9 @@ private: // ---------------------------------------------------------
         
         ofParameterGroup parameters;
             ofParameter<float> dimmer;
+            std::vector<ofParameter<float>> fOptions;
+            std::vector<ofParameter<int>>   iOptions; 
+            std::vector<ofParameter<bool>>  bOptions; 
     };
     
     struct HeadSnapshot{

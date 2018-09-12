@@ -50,12 +50,8 @@ void ofx::fixture::Simulation::moveGraphics( int x, int y ){
     camera.setControlArea( ofRectangle(gx, gy, fbo.getWidth(), fbo.getHeight() ) );    
 }
 
-void ofx::fixture::Simulation::add( Head & head ){
-    heads.push_back( &head );
-}
-
-void ofx::fixture::Simulation::add( Dimmer & dimmer ){
-    dimmers.push_back( &dimmer );
+void ofx::fixture::Simulation::add( Dimmer & fixt ){
+    fixtures.push_back( &fixt );
 }
 
 void ofx::fixture::Simulation::update(){
@@ -72,12 +68,8 @@ void ofx::fixture::Simulation::update(){
 
                 ofPushMatrix();
                 //ofTranslate( -getBoundaries().x*0.5f, 0.0f, -getBoundaries().z*0.5f );
-                for( auto & head : heads ){
-                    head->draw();
-                }
-                
-                for( auto & dimmer : dimmers ){
-                    dimmer->draw();
+                for( auto & fixt : fixtures ){
+                    fixt->draw();
                 }
                 
                 // draw lines in the floor borders
@@ -92,8 +84,8 @@ void ofx::fixture::Simulation::update(){
 
                 ofEnableLighting();
 
-                for( auto & head : heads ){
-                    head->enableLight();
+                for( auto & fixt : fixtures ){
+                    fixt->enableLight();
                 }                
                 material.begin();
                     floor.draw();
@@ -102,8 +94,8 @@ void ofx::fixture::Simulation::update(){
                 
                 drawObjects();
                 
-                for( auto & head : heads ){
-                    head->disableLight();
+                for( auto & fixt : fixtures ){
+                    fixt->disableLight();
                 }
 
                 ofDisableLighting();
