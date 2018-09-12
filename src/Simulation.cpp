@@ -91,16 +91,21 @@ void ofx::fixture::Simulation::update(){
                 ofSetColor(255);
 
                 ofEnableLighting();
+
+                for( auto & head : heads ){
+                    head->enableLight();
+                }                
                 material.begin();
-                    for( auto & head : heads ){
-                        head->enableLight();
-                    }                
                     floor.draw();
                     wall.draw();
-                    for( auto & head : heads ){
-                        head->disableLight();
-                    }
                 material.end();
+                
+                drawObjects();
+                
+                for( auto & head : heads ){
+                    head->disableLight();
+                }
+
                 ofDisableLighting();
             
 

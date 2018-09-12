@@ -21,6 +21,8 @@ public:
     void add( Head & head );
     void add( Dimmer & dimmer );   
     
+    virtual void drawObjects(){};
+    
     void update();
     void draw();
     
