@@ -18,6 +18,7 @@ public:
     
     void init() override;
     void update() override;
+    void close() override;
     
     ofParameter<float> temperature;
     ofParameter<float> focus;

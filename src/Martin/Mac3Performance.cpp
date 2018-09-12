@@ -18,8 +18,30 @@ std::string ofx::fixture::Martin::Mac3Performance::fixtureName(){
 
 void ofx::fixture::Martin::Mac3Performance::init(){
     setDmx( 39, 45 ); // lamp on
+    
+    // this is to avoid multiple lamp on messages
+    // that could draw too much current
+    ofSleepMillis( 50 ); 
+    
     setDmx( 1, 255 ); // shutter open
 }
+
+
+void ofx::fixture::Martin::Mac3Performance::close(){
+    
+    setDmx( 39, 50 ); // lamp off
+    setDmx( 1, 0 ); // shutter close
+    
+    // reset to zero position 
+    dimmer = 0.0f;
+    pan = 0.0f;
+    tilt = 0.0f;
+    setDmxDimmer16bit( 2, 3 );
+    setDmxPan16bit( 35, 36 );
+    setDmxTilt16bit( 37, 38 );
+
+}
+
 
 void ofx::fixture::Martin::Mac3Performance::update(){
     

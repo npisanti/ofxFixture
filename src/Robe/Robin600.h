@@ -15,6 +15,7 @@ public:
     
     void init() override;
     void update() override;
+    void close() override;
     
 };
 

@@ -17,6 +17,20 @@ void ofx::fixture::Robe::Robin600::init(){
     // todo : set highest speed for panning and tilting 
 }
 
+void ofx::fixture::Robe::Robin600::close(){
+
+	setDmx( 35, 9 );  // shutter close     
+
+    // resets to zero position
+    pan = 0.0f;
+    tilt = 0.0f; 
+    dimmer = 0.0f;
+    setDmxPan16bit( 1, 2 );
+    setDmxTilt16bit( 3, 4 );
+    setDmxDimmer16bit( 36, 37 );
+
+}
+
 void ofx::fixture::Robe::Robin600::update(){
     
     setDmxPan16bit( 1, 2 );

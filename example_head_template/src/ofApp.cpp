@@ -24,7 +24,7 @@ void ofApp::setup(){
     // boundaries for fixtures position and targets
     ofx::fixture::setBoundaries( sw, sh, sd );
     
-    simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries
+    simulation.setStage( sw, sh, sd ); // stage can be smaller than boundaries
     simulation.setGraphics( 20, 20, 900, 800 );
 
     

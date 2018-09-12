@@ -11,6 +11,12 @@ ofx::fixture::Head::Head(){
     panMin = -180; 
     panMax = 180;
     
+    // for light simulation 
+    cutoffMin = 3.0f;
+    cutoffMax = 35.0f;
+    lightDistMin = 0.0f;
+    lightDistMax = 20.0f;
+    
     // default orientation
     orientation = glm::vec3( 180, 180, 0);
 
@@ -35,6 +41,12 @@ ofx::fixture::Head::Head(){
     tip.setParent( spot );
     tip.setPosition( 0, -15, 0 );
     tip.set( 12, 4 );
+
+    light.setParent( tip );   
+    light.tiltDeg(-90);
+    light.setSpotlight();
+    light.setSpotConcentration( 10 );
+    light.setup();
 
     
     parameters.add( zoom.set("zoom", 0.0f, 0.0f, 1.0f) );
@@ -97,6 +109,30 @@ void ofx::fixture::Head::update(){
 
 }
 
+void ofx::fixture::Head::enableLight(){ 
+    
+    //light.setSpotlightCutOff( 2+50*zoom*zoom );
+    light.setSpotlightCutOff( ofMap( zoom, 0.0f, 1.0f, cutoffMin, cutoffMax ) );
+    light.setPosition( 0, ofMap( zoom, 0.0f, 1.0f, lightDistMin, lightDistMax ), 0 );
+    
+    float r = red + white;
+    r = (r<255.0f) ? r : 255.0f;
+    float g = green + white;
+    g = (g<255.0f) ? g : 255.0f;
+    float b = blue + white;
+    b = (b<255.0f) ? b : 255.0f;
+
+    light.setDiffuseColor( ofColor(r, g, b)*dimmer );
+    //light.setSpecularColor( ofColor(r, g, b) );
+    
+    light.enable(); 
+}
+
+void ofx::fixture::Head::disableLight(){ 
+    light.disable(); 
+}
+    
+    
 void ofx::fixture::Head::draw(){
 
     head.setOrientation( glm::vec3(0,0,0) );
@@ -128,48 +164,7 @@ void ofx::fixture::Head::draw(){
 
 }
 
-void ofx::fixture::Head::setDmx( int specificationCh, int value ){
-    dmx->setLevel( specificationCh-1 + channel, value, universe );
-}
-
-
-void ofx::fixture::Head::setDmxDimmer16bit( int coarseChannel, int fineChannel ){
-	int dim = dimmer * 65535;
-	int dim0 = (dim >> 8) & 0x00ff;
-	int dim1 =  dim       & 0x00ff;
-	dmx->setLevel( channel+coarseChannel-1, dim0,	universe );		
-	dmx->setLevel( channel+fineChannel-1, 	dim1,	universe );		
-}
-
-void ofx::fixture::Head::setDmxPan16bit( int coarseChannel, int fineChannel, bool reverse ){
-    int value;
-    switch( reverse ){
-        case false: value = ofMap( pan, panMin, panMax, 65535, 0 ); break;
-        case true:  value = ofMap( pan, panMin, panMax, 0, 65535 ); break;
-    }
-    int coarse = (value >> 8) & 0x00ff;
-    int fine =    value       & 0x00ff;
-    dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-	dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
-}
-
-void ofx::fixture::Head::setDmxTilt16bit( int coarseChannel, int fineChannel, bool reverse ){
-    int value;
-    switch( reverse ){
-        case false: value = ofMap( tilt, tiltMin, tiltMax, 0, 65535 ); break;
-        case true:  value = ofMap( tilt, tiltMin, tiltMax, 65535, 0 ); break;
-    }
-    int coarse = (value >> 8) & 0x00ff;
-    int fine =    value       & 0x00ff;
-    dmx->setLevel( channel+coarseChannel-1, coarse,	universe );		
-	dmx->setLevel( channel+fineChannel-1, 	fine,	universe );	
-}
-
-
 // --------------------- internal functions -------------------------
-void ofx::fixture::Head::setTarget( glm::vec3 pos ){
-    target.set( pos );
-}
 
 void ofx::fixture::Head::onTargetChange( glm::vec3 & value ){
     
@@ -310,5 +305,19 @@ void ofx::fixture::Head::addExtra( ofParameter<bool> & parameter ){
     extras.add( parameter );
     bOptionals.push_back( &parameter );
     bHasExtra = true;
+}
+
+void ofx::fixture::Head::setSimulationConcentration( float value ){
+    light.setSpotConcentration( value );
+}
+
+void ofx::fixture::Head::setSimulationLightCutoffRange( float zoomMin, float zoomMax ){
+    cutoffMin = zoomMin;
+    cutoffMax = zoomMax;
+}
+
+void ofx::fixture::Head::setSimulationLightDistanceRange( float zoomMax ){
+    lightDistMin = 0.0f;
+    lightDistMax = zoomMax;
 }
 

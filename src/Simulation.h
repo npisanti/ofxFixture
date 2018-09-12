@@ -37,6 +37,8 @@ private:
 
     ofPlanePrimitive floor;
     ofPlanePrimitive wall;
+    
+    ofMaterial material;
 
     std::vector<Dimmer*> dimmers;
     std::vector<Head*>   heads;

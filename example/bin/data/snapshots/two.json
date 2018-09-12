@@ -5,39 +5,39 @@
             "chase_target": "1",
             "dimmer": "1",
             "green": "0",
-            "pan": "190.611",
+            "pan": "100.611",
             "red": "255",
             "target": "976.997, 0, 541.309",
-            "tilt": "131.071",
+            "tilt": "-48.929",
             "white": "0",
-            "zoom": "0"
+            "zoom": "1"
         },
         "u1ch41_virtual_head": {
             "blue": "0",
             "chase_target": "1",
             "dimmer": "1",
             "green": "0",
-            "pan": "239.598",
+            "pan": "149.598",
             "red": "255",
             "target": "977, 0, 541.311",
-            "tilt": "165.542",
+            "tilt": "-14.4582",
             "white": "0",
-            "zoom": "0"
+            "zoom": "1"
         },
         "u1ch79_dimmer": {
-            "dimmer": "1"
+            "u1ch79_dimmer": "1"
         },
         "u1ch84_dimmer": {
-            "dimmer": "0"
+            "u1ch84_dimmer": "1"
         },
         "u1ch85_dimmer": {
-            "dimmer": "0"
+            "u1ch85_dimmer": "1"
         },
         "u1ch89_dimmer": {
-            "dimmer": "0"
+            "u1ch89_dimmer": "1"
         },
         "u1ch97_dimmer": {
-            "dimmer": "0"
+            "u1ch97_dimmer": "1"
         }
     }
 }

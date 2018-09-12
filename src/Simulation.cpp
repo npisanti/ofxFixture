@@ -4,13 +4,17 @@
 ofx::fixture::Simulation::Simulation(){
     bActive = true;
 
+    ofSetSmoothLighting(true);
+    
+    material.setShininess( 50 );
+    material.setDiffuseColor(ofFloatColor::white);
+    material.setSpecularColor(ofColor(255, 255, 255, 255));
 
     // easy cam
     camera.setPosition( glm::vec3(0.0f, 0.5f, 0.5f )); // up, front
     camera.setTarget( glm::vec3( 0.0f, 0.0f, 0.0f ) );
     
     setStage( 1600.0f, 800.0f, 1200.0f ); 
-
 }
 
 
@@ -21,15 +25,18 @@ void ofx::fixture::Simulation::setStage(){
 void ofx::fixture::Simulation::setStage( float stageWidht, float stageHeight, float stageDepth ){
 
     // walls
+    floor.setResolution( 400, 400 );
+    floor.setPosition(getBoundaries().x*0.5f, 0.0f, getBoundaries().z*0.5f );
     floor.set( stageWidht, stageDepth );
     floor.setOrientation( glm::vec3(0,0,0) );
-    floor.rotateDeg( 90.0f, glm::vec3(1,0,0) );
+    floor.rotateDeg( -90.0f, glm::vec3(1,0,0) );
 
+    wall.setResolution( 300, 300  );
     wall.set( stageWidht, stageHeight );
-    wall.setPosition( 0, stageHeight*0.5f, -stageDepth*0.5f );
+    wall.setPosition( stageWidht*0.5f, stageHeight*0.5f, 0 );
     
-    camera.setDistance( getBoundaries().x*1.1f );
-    // set scaling
+    camera.setDistance( getBoundaries().x*1.1f );    
+
 }
 
 void ofx::fixture::Simulation::setGraphics( int x, int y, int w, int h ){
@@ -53,17 +60,18 @@ void ofx::fixture::Simulation::add( Dimmer & dimmer ){
 
 void ofx::fixture::Simulation::update(){
     if( bActive ){
+        camera.setTarget( glm::vec3( getBoundaries().x*0.5f, 0.0f, 0.0f ));
         
         fbo.begin();
         
             ofClear(0, 0, 0, 0);
             ofPushStyle();
             ofEnableDepthTest();
-            //ofEnableLighting();
+
             camera.begin();
 
                 ofPushMatrix();
-                ofTranslate( -getBoundaries().x*0.5f, 0.0f, -getBoundaries().z*0.5f );
+                //ofTranslate( -getBoundaries().x*0.5f, 0.0f, -getBoundaries().z*0.5f );
                 for( auto & head : heads ){
                     head->draw();
                 }
@@ -80,15 +88,27 @@ void ofx::fixture::Simulation::update(){
                 ofPopMatrix();
 
                 // draw walls 
-                ofSetColor( 40 );
-                floor.draw();
-                wall.draw();
-                
+                ofSetColor(255);
+
+                ofEnableLighting();
+                material.begin();
+                    for( auto & head : heads ){
+                        head->enableLight();
+                    }                
+                    floor.draw();
+                    wall.draw();
+                    for( auto & head : heads ){
+                        head->disableLight();
+                    }
+                material.end();
+                ofDisableLighting();
+            
+
                 ofSetColor( 255 );
                 ofDrawSphere( 0, 0, 0, 5);
                 
             camera.end();
-            //ofDisableLighting();
+
             ofDisableDepthTest();
             ofPopStyle();
         fbo.end();
