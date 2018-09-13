@@ -6,6 +6,12 @@
 #include "Simulation.h"
 #include "States.h"
 
-#include "Robe/Robin600.h"
+#include "Spot.h"
+#include "LightBar.h"
+
 
 #include "Martin/Mac3Performance.h"
+
+#include "Robe/Robin600.h"
+
+#include "Showtec/SunstripActive.h"

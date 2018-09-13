@@ -16,7 +16,7 @@ ofx::fixture::Dimmer::Dimmer(){
     position.addListener( this, &Dimmer::onPositionChanged);
     installation.add( position.set("position", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     orientation.addListener( this, &Dimmer::onOrientationChanged);
-    installation.add( orientation.set("orientation", glm::vec3(180, 180,0 ), glm::vec3(0, 0, 0), glm::vec3(360, 360, 0) ) );
+    installation.add( orientation.set("orientation", glm::vec3(180, 180, 0 ), glm::vec3(0, 0, 0), glm::vec3(360, 360, 0) ) );
     
     fOptionals.clear();
     iOptionals.clear();
@@ -44,7 +44,7 @@ void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe ){
     
     parameters.setName( address+" " + fixtureName() );
     dimmer.setName( address+" " + fixtureName() );
-    installation.setName( "pos "+address+" " + fixtureName());
+    installation.setName( address+" " + fixtureName());
     
     // update to boundaries
     position.set( position.getName(), position.get(), glm::vec3(0, 0, 0), boundaries );    

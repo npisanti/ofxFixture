@@ -8,6 +8,7 @@ namespace ofx { namespace fixture {
 
 class Dimmer {
     friend class States;
+    friend class Simulation;
     
 public:
     Dimmer();

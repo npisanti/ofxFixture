@@ -3,20 +3,34 @@
 
 ofx::fixture::Simulation::Simulation(){
     bActive = true;
+    bUseLights = false;
 
-    ofSetSmoothLighting(true);
-    
-    material.setShininess( 50 );
-    material.setDiffuseColor(ofFloatColor::white);
-    material.setSpecularColor(ofColor(255, 255, 255, 255));
+    wallMaterial.setShininess( 50 );
+    wallMaterial.setDiffuseColor(ofFloatColor::white);
+    wallMaterial.setSpecularColor(ofColor(255, 255, 255, 255));
+    wallColor = ofColor( 50 );
+
+    floorMaterial.setShininess( 50 );
+    floorMaterial.setDiffuseColor(ofFloatColor::white);
+    floorColor = wallColor;
 
     // easy cam
     camera.setPosition( glm::vec3(0.0f, 0.5f, 0.5f )); // up, front
     camera.setTarget( glm::vec3( 0.0f, 0.0f, 0.0f ) );
     
     setStage( 1600.0f, 800.0f, 1200.0f ); 
+
 }
 
+
+void ofx::fixture::Simulation::enableLighting(){
+    bUseLights = true;
+    ofSetSmoothLighting(true);
+}
+
+void ofx::fixture::Simulation::disableLighting(){
+    bUseLights = false;
+}
 
 void ofx::fixture::Simulation::setStage(){
     setStage( getBoundaries().x, getBoundaries().y, getBoundaries().z );
@@ -55,6 +69,7 @@ void ofx::fixture::Simulation::add( Dimmer & fixt ){
 }
 
 void ofx::fixture::Simulation::update(){
+   
     if( bActive ){
         camera.setTarget( glm::vec3( getBoundaries().x*0.5f, 0.0f, 0.0f ));
         
@@ -66,41 +81,53 @@ void ofx::fixture::Simulation::update(){
 
             camera.begin();
 
-                ofPushMatrix();
-                //ofTranslate( -getBoundaries().x*0.5f, 0.0f, -getBoundaries().z*0.5f );
                 for( auto & fixt : fixtures ){
                     fixt->draw();
+                    if( Dimmer::bDrawAddress ){
+                        ofSetColor( 255);    
+                        ofDrawBitmapString( fixt->address, fixt->node.getPosition());             
+                    }
                 }
-                
-                // draw lines in the floor borders
-                ofSetColor(0);
-                ofSetLineWidth( 2.0f );
-                ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
-                
-                ofPopMatrix();
 
-                // draw walls 
-                ofSetColor(255);
+                if( bUseLights ){
+                    
+                    ofEnableLighting();
+                    for( auto & fixt : fixtures ){
+                        fixt->enableLight();
+                    }                
+                    
+                    floorMaterial.begin();
+                        floor.draw();
+                    floorMaterial.end();
 
-                ofEnableLighting();
+                    wallMaterial.begin();
+                        wall.draw();
+                    wallMaterial.end();
+                    
+                    drawObjects();
+                    
+                    for( auto & fixt : fixtures ){
+                        fixt->disableLight();
+                    }
+                    ofDisableLighting();      
+                                  
+                }else{
 
-                for( auto & fixt : fixtures ){
-                    fixt->enableLight();
-                }                
-                material.begin();
+                    ofSetColor( floorColor );
                     floor.draw();
+                    ofSetColor( wallColor );
                     wall.draw();
-                material.end();
-                
-                drawObjects();
-                
-                for( auto & fixt : fixtures ){
-                    fixt->disableLight();
+
+                    // draw lines in the floor borders
+                    ofSetColor(0);
+                    ofSetLineWidth( 2.0f );
+                    ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
+
+                    ofSetColor(255);
+                    drawObjects();
                 }
 
-                ofDisableLighting();
-            
-
+                // draw the origin 
                 ofSetColor( 255 );
                 ofDrawSphere( 0, 0, 0, 5);
                 
@@ -142,3 +169,12 @@ void ofx::fixture::Simulation::toggleDrawAddress(){
     Dimmer::bDrawAddress = ! Dimmer::bDrawAddress;
 }
     
+void ofx::fixture::Simulation::setWallColor( ofColor color ){ 
+    wallColor = color;
+    wallMaterial.setDiffuseColor(color); 
+}
+
+void ofx::fixture::Simulation::setFloorColor( ofColor color ){ 
+    floorColor = color;
+    floorMaterial.setDiffuseColor(color); 
+}

@@ -23,11 +23,13 @@ void ofApp::setup(){
     // boundaries for fixtures position and targets
     ofx::fixture::setBoundaries( sw, sh, sd );
     
-
     simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries
     simulation.setGraphics( 20, 20, 900, 800 );
     simulation.setDrawAddress( true );
     
+    // use this to change the floor or wall color
+    // simulation.setFloorColor( ofColor(40) );
+    // simulation.setWallColor( ofColor(255, 200, 200 ) );
     
     // -------------------- heads -----------------------------------
     heads.resize(2);
@@ -43,30 +45,35 @@ void ofApp::setup(){
         gui.add( head.parameters );
     }
       
-    // -------------------- dimmers ---------------------------------
-    dimmers.resize(5);
-    for( size_t i=0; i<dimmers.size(); ++i ){
-        dimmers[i].position.set( glm::vec3( sw*0.25f*i, sh, sd*0.5f) );
+    // -------------------- spots ---------------------------------
+    spots.resize(5);
+    for( size_t i=0; i<spots.size(); ++i ){
+        spots[i].position.set( glm::vec3( sw*0.25f*i, sh, sd*0.5f) );
     }
-    dimmers[0].setup( dmx, 79 );
-    dimmers[1].setup( dmx, 84 );
-    dimmers[2].setup( dmx, 85 );
-    dimmers[3].setup( dmx, 89 );
-    dimmers[4].setup( dmx, 97 );
+    spots[0].setup( dmx, 79 );
+    spots[1].setup( dmx, 84 );
+    spots[2].setup( dmx, 85 );
+    spots[3].setup( dmx, 89 );
+    spots[4].setup( dmx, 97 );
     
-    for( auto & dimmer : dimmers ){ 
-        simulation.add( dimmer ); 
-        states.add( dimmer );
-        positions.add( dimmer.installation );
-        gui.add( dimmer.dimmer ); // dimmers have just one parameter, so we add that
+    for( auto & spot : spots ){ 
+        simulation.add( spot ); 
+        states.add( spot );
+        positions.add( spot.installation );
+        gui.add( spot.dimmer ); // spots have just one parameter, so we add that
+        spot.dimmer = 0.0f;
     }
 
+    bar.setup( dmx, 270 );
+    simulation.add( bar );
+    states.add( bar );
+    positions.add( bar.installation );
+    gui.add( bar.parameters );
     // ------------------ states ------------------------------------
     // init your snapshot only after you'added all the heads 
-    // and dimmers to the state manager 
+    // and spots to the state manager 
     states.init( "one" );
     states.init( "two" );
-
     
     // adds misc parameters to gui ----------------------------------
     gui.add( ofx::fixture::Dimmer::bDrawAddress ); // static ofParameter<bool>
@@ -76,6 +83,7 @@ void ofApp::setup(){
     gui.minimizeAll();
     
     positions.minimizeAll();
+    positions.loadFromFile( "positions.xml" );
 
 }
 

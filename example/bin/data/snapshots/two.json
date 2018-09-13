@@ -24,20 +24,20 @@
             "white": "0",
             "zoom": "1"
         },
-        "u1ch79_dimmer": {
-            "u1ch79_dimmer": "1"
+        "u1ch79_spot": {
+            "u1ch79_spot": "1"
         },
-        "u1ch84_dimmer": {
-            "u1ch84_dimmer": "1"
+        "u1ch84_spot": {
+            "u1ch84_spot": "1"
         },
-        "u1ch85_dimmer": {
-            "u1ch85_dimmer": "1"
+        "u1ch85_spot": {
+            "u1ch85_spot": "0"
         },
-        "u1ch89_dimmer": {
-            "u1ch89_dimmer": "1"
+        "u1ch89_spot": {
+            "u1ch89_spot": "0"
         },
-        "u1ch97_dimmer": {
-            "u1ch97_dimmer": "1"
+        "u1ch97_spot": {
+            "u1ch97_spot": "0"
         }
     }
 }

@@ -147,11 +147,6 @@ void ofx::fixture::Head::draw(){
         ofDrawSphere( target, 5 );
         ofDrawLine( node.getPosition(), target ); 
     }
-    
-    if( bDrawAddress ){
-        ofSetColor( 255);    
-        ofDrawBitmapString( address, node.getPosition());             
-    }
 
 }
 
