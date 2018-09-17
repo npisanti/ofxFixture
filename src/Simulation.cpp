@@ -26,6 +26,7 @@ ofx::fixture::Simulation::Simulation(){
 void ofx::fixture::Simulation::enableLighting(){
     bUseLights = true;
     ofSetSmoothLighting(true);
+    Dimmer::bSetupGLLights = true;
 }
 
 void ofx::fixture::Simulation::disableLighting(){

@@ -13,7 +13,7 @@ class Dimmer {
 public:
     Dimmer();
     
-    virtual void setup( ofxDmx & dmx, int channel, int universe=1 );
+    virtual void setup( ofxDmx & dmx, int channel, int universe=1, std::string name="" );
 
     virtual std::string fixtureName();
     virtual void init(){}; // to send out default dmx messages
@@ -35,6 +35,7 @@ public:
     
     
     static ofParameter<bool> bDrawAddress;
+    static bool bSetupGLLights;
     
     
     static void setBoundaries( glm::vec3 dimensions );

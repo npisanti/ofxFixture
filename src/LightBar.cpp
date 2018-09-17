@@ -27,12 +27,14 @@ void ofx::fixture::LightBar::setNumLights( int num, bool reverse  ){
         tips[i].setPosition( -(num-1)*5 + ofMap( i, 0, num-1, 0, (num-1)*10 ), 4, 0 );
         tips[i].set( 2.5, 2 );    
 
-        lv[i].setParent( tips[i] );   
-        lv[i].tiltDeg(-90);
-        lv[i].setSpotlight();
-        lv[i].setSpotConcentration( 10 );
-        lv[i].setSpotlightCutOff( 5.0f );
-        lv[i].setup();
+        if( bSetupGLLights ){
+            lv[i].setParent( tips[i] );   
+            lv[i].tiltDeg(-90);
+            lv[i].setSpotlight();
+            lv[i].setSpotConcentration( 10 );
+            lv[i].setSpotlightCutOff( 5.0f );
+            lv[i].setup();            
+        }
         
         addOption(lights[i].set("light "+ofToString(i), 1.0f, 0.0f, 1.0f) );
     }

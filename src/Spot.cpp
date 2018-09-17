@@ -18,11 +18,13 @@ ofx::fixture::Spot::Spot(){
     tip.setPosition( 0, -15, 0 );
     tip.set( 12, 4 );    
     
-    light.setParent( tip );   
-    light.tiltDeg(-90);
-    light.setSpotlight();
-    light.setSpotConcentration( 10 );
-    light.setup();
+    if( bSetupGLLights ){
+        light.setParent( tip );   
+        light.tiltDeg(-90);
+        light.setSpotlight();
+        light.setSpotConcentration( 10 );
+        light.setup();
+    }
 
     installation.add( zoom.set("zoom", 0.1f, 0.0f, 1.0f) );
 }

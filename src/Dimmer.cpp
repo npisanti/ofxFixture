@@ -4,6 +4,7 @@
 glm::vec3 ofx::fixture::Dimmer::boundaries = glm::vec3( 1600.0f, 800.0f, 1200.0f );
 
 ofParameter<bool> ofx::fixture::Dimmer::bDrawAddress = ofParameter<bool>( "draw address", false );
+bool ofx::fixture::Dimmer::bSetupGLLights = false;
 
 ofx::fixture::Dimmer::Dimmer(){
 
@@ -35,16 +36,22 @@ void ofx::fixture::Dimmer::draw(){
     // todo : add dimmer graphics 
 }
     
-void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe ){
+void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe, std::string name ){
     this->channel = channel;
     this->universe = universe;
     this->dmx = &dmx;
     
     address = "u"+ofToString(universe) + "ch" + ofToString(channel);
     
-    parameters.setName( address+" " + fixtureName() );
-    dimmer.setName( address+" " + fixtureName() );
-    installation.setName( address+" " + fixtureName());
+    if( name=="" ){
+        parameters.setName( address+" " + fixtureName() );
+        dimmer.setName( address+" " + fixtureName() );
+        installation.setName( address+" " + fixtureName());
+    }else{
+        parameters.setName( name );
+        dimmer.setName( name );
+        installation.setName( name );
+    }
     
     // update to boundaries
     position.set( position.getName(), position.get(), glm::vec3(0, 0, 0), boundaries );    
