@@ -26,6 +26,7 @@ public:
     
     
     ofParameterGroup installation;
+    ofParameter<bool> armed;
     ofParameter<glm::vec3> position;
     ofParameter<glm::vec3> orientation;
 
@@ -46,7 +47,7 @@ public:
 protected:
     // specificationCh is the channel in the fixture's dmx specifation
     inline void setDmx( int specificationCh, int value ){
-        dmx->setLevel( specificationCh-1 + channel, value, universe );
+        if(armed) dmx->setLevel( specificationCh-1 + channel, value, universe );
     }
 
     // adds a custom ofParameter to snapshot management 

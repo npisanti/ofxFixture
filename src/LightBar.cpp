@@ -43,13 +43,15 @@ void ofx::fixture::LightBar::setNumLights( int num, bool reverse  ){
 
 
 void ofx::fixture::LightBar::update(){
-    if(bReverse){
-        for(size_t i=0; i<lights.size(); ++i ){
-            setDmx( lights.size()-i, dimmer*lights[i]*255.0f );
-        }        
-    }else{
-        for(size_t i=0; i<lights.size(); ++i ){
-            setDmx( i+1, dimmer*lights[i]*255.0f );
+    if ( armed ){
+        if(bReverse){
+            for(size_t i=0; i<lights.size(); ++i ){
+                setDmx( lights.size()-i, dimmer*lights[i]*255.0f );
+            }        
+        }else{
+            for(size_t i=0; i<lights.size(); ++i ){
+                setDmx( i+1, dimmer*lights[i]*255.0f );
+            }        
         }        
     }
 }

@@ -8,7 +8,7 @@ ofx::fixture::Simulation::Simulation(){
     wallMaterial.setShininess( 50 );
     wallMaterial.setDiffuseColor(ofFloatColor::white);
     wallMaterial.setSpecularColor(ofColor(255, 255, 255, 255));
-    wallColor = ofColor( 50 );
+    wallColor = ofColor( 10 );
 
     floorMaterial.setShininess( 50 );
     floorMaterial.setDiffuseColor(ofFloatColor::white);
@@ -19,6 +19,8 @@ ofx::fixture::Simulation::Simulation(){
     camera.setTarget( glm::vec3( 0.0f, 0.0f, 0.0f ) );
     
     setStage( 1600.0f, 800.0f, 1200.0f ); 
+    
+    bDrawFixturesName.set( "draw fixture name", false );
 
 }
 
@@ -50,7 +52,7 @@ void ofx::fixture::Simulation::setStage( float stageWidht, float stageHeight, fl
     wall.set( stageWidht, stageHeight );
     wall.setPosition( stageWidht*0.5f, stageHeight*0.5f, 0 );
     
-    camera.setDistance( getBoundaries().x*1.1f );    
+    camera.setDistance( getBoundaries().x*1.2f );    
 
 }
 
@@ -87,6 +89,10 @@ void ofx::fixture::Simulation::update(){
                     if( Dimmer::bDrawAddress ){
                         ofSetColor( 255);    
                         ofDrawBitmapString( fixt->address, fixt->node.getPosition());             
+                    }
+                    if( bDrawFixturesName ){
+                        ofSetColor( 255, 0, 0 );    
+                        ofDrawBitmapString( fixt->parameters.getName(), fixt->node.getPosition());             
                     }
                 }
 

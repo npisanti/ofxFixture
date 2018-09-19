@@ -15,7 +15,7 @@ public:
 
     void setup( ofxDmx & dmx, int channel, int universe=1, std::string name="" ) override;
 
-    void setTarget( glm::vec3 pos ){ target = pos; }
+    void setTarget( glm::vec3 pos ){ chaseTarget=true; target = pos; }
     void setColor( const ofColor & color, bool alphaAsWhite=false );
 
     ofParameter<float> zoom;

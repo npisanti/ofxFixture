@@ -13,12 +13,12 @@ public:
     Simulation();
 
     void setStage();
-    
+
     void enableLighting();
     void disableLighting();
     
     void setStage( float stageWidht, float stageHeight, float stageDepth );
-    
+        
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
 
@@ -37,6 +37,10 @@ public:
     
     void setWallColor( ofColor color );
     void setFloorColor( ofColor color );
+    
+    void setCameraDistance( float distance ){ camera.setDistance(distance); }
+    
+    ofParameter<bool> bDrawFixturesName;
     
 private:
     ofEasyCam camera;

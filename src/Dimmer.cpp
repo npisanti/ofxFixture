@@ -14,6 +14,7 @@ ofx::fixture::Dimmer::Dimmer(){
     parameters.add( dimmer.set("dimmer", 1.0f, 0.0f, 1.0f) );
 
     installation.setName( "fixture base class pos" );
+    installation.add( armed.set("arm fixture", true ) );
     position.addListener( this, &Dimmer::onPositionChanged);
     installation.add( position.set("position", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     orientation.addListener( this, &Dimmer::onOrientationChanged);
@@ -29,7 +30,7 @@ std::string ofx::fixture::Dimmer::fixtureName(){
 }
 
 void ofx::fixture::Dimmer::update(){
-    dmx->setLevel( channel, int( dimmer ), universe );
+    if(armed) dmx->setLevel( channel, int( dimmer ), universe );
 }
 
 void ofx::fixture::Dimmer::draw(){

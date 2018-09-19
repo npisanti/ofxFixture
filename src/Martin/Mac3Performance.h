@@ -26,6 +26,9 @@ public:
     ofParameter<float> goboRotate;
     ofParameter<float> goboAnimate;
     
+    std::vector<ofParameter<float>> bladeAmounts;
+    std::vector<ofParameter<float>> bladeAngles;
+
 };
 
 }}}
