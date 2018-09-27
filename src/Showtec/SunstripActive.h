@@ -9,8 +9,8 @@ class SunstripActive : public LightBar {
 
 public:
     SunstripActive(){ 
-        // 8 lights, reversed DMX control
-        setNumLights(8, true);
+        // 10 lights, reversed DMX control
+        setNumLights(10, true);
     }
     
 };

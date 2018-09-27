@@ -30,7 +30,7 @@ std::string ofx::fixture::Dimmer::fixtureName(){
 }
 
 void ofx::fixture::Dimmer::update(){
-    if(armed) dmx->setLevel( channel, int( dimmer ), universe );
+    if(armed) dmx->setLevel( channel, int( dimmer*255.0f ), universe );
 }
 
 void ofx::fixture::Dimmer::draw(){
