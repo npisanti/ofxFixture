@@ -14,4 +14,4 @@ So this kind of calibration works better with the fixture display pointed AWAY f
 
 CREDITS:
 
-The code for `ofx::fixture::Head' `panAngle()` and `tiltAngle()` is ported to glm from Shohei Fujimoto's [oF_movingLightHead_object](https://github.com/sfjmt/oF_movingLightHead_object).
+The code for `ofx::fixture::Head` `panAngle()` and `tiltAngle()` is ported to `glm` from Shohei Fujimoto's [oF_movingLightHead_object](https://github.com/sfjmt/oF_movingLightHead_object).
