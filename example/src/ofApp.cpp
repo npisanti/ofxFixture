@@ -12,24 +12,33 @@ void ofApp::setup(){
  
     transitioning = 0;
     cursor = 0.0f;
-    
-    // -------------------- simulation ------------------------------  
+
+
+
+	dmx.connect( "ttyUSB0", 512 ); // use the name
+	//dmx.connect(0); // or use a number
+
+    // -------------------- set up manager --------------------------  
    
-    // stage dimensions, I like to think it as centimeters
+    // simulated world boundaries, I like to think it as centimeters
     float sw = 1200.0f;
     float sh = 600.0f;
     float sd = 800.0f;
     
-    // boundaries for fixtures position and targets
-    ofx::fixture::setBoundaries( sw, sh, sd );
+    // ==== WARNING!!! call this function before all the others =====
+    manager.setup( dmx, sw, sh, sd ); 
+    // ==============================================================  
     
-    simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries
-    simulation.setGraphics( 20, 20, 900, 800 );
-    simulation.setDrawAddress( true );
+    // use this if you don't want simulated graphics 
+    // manager.setup( dmx, sw, sh, sd, false ); 
+    
+    manager.simulation.setStage( sw, 500, sd ); // stage can be smaller than boundaries
+    manager.simulation.setGraphics( 20, 20, 900, 800 ); 
+    manager.simulation.setDrawAddress( true );
     
     // use this to change the floor or wall color
-    // simulation.setFloorColor( ofColor(40) );
-    // simulation.setWallColor( ofColor(255, 200, 200 ) );
+    // manager.simulation.setFloorColor( ofColor(40) );
+    // manager.simulation.setWallColor( ofColor(255, 200, 200 ) );
     
     // -------------------- heads -----------------------------------
     heads.resize(2);
@@ -38,13 +47,6 @@ void ofApp::setup(){
     heads[1].setup( dmx, 41 );
     heads[1].position.set( glm::vec3( sw*0.75f, sh, sd*0.5f) );
  
-    for( auto & head : heads ){ 
-        simulation.add( head ); 
-        states.add( head );
-        positions.add( head.installation );
-        gui.add( head.parameters );
-    }
-      
     // -------------------- spots ---------------------------------
     spots.resize(5);
     for( size_t i=0; i<spots.size(); ++i ){
@@ -56,32 +58,30 @@ void ofApp::setup(){
     spots[3].setup( dmx, 89 );
     spots[4].setup( dmx, 97 );
     
-    for( auto & spot : spots ){ 
-        simulation.add( spot ); 
-        states.add( spot );
-        positions.add( spot.installation );
-        gui.add( spot.dimmer ); // spots have just one parameter, so we add that
-        spot.dimmer = 0.0f;
-    }
-
+    // --------------------- light bar ------------------------------
+    bar.setNumLights( 10 );
     bar.setup( dmx, 270 );
-    simulation.add( bar );
-    states.add( bar );
-    positions.add( bar.installation );
-    gui.add( bar.parameters );
+
+    
+    // ------------ add fixtures to manager -------------------------
+    for( auto & fixt : heads ){ manager.add( fixt ); }
+    for( auto & fixt : spots ){ manager.add( fixt ); }
+    manager.add( bar );
+
     // ------------------ states ------------------------------------
     // init your snapshot only after you'added all the heads 
     // and spots to the state manager 
-    states.init( "one" );
-    states.init( "two" );
+    manager.snapshots.init( "one" );
+    manager.snapshots.init( "two" );
     
     // adds misc parameters to gui ----------------------------------
+    gui.add( manager.controls );
     gui.add( ofx::fixture::Dimmer::bDrawAddress ); // static ofParameter<bool>
     gui.add( bTargetDemo.set("target demo", true) );
-    
-    gui.add( states.multiple.parameters );
+    gui.add( manager.multiple );
     gui.minimizeAll();
     
+    positions.add( manager.positions );
     positions.minimizeAll();
     positions.loadFromFile( "positions.xml" );
 
@@ -105,17 +105,17 @@ void ofApp::update(){
         switch( transitioning ){
             case 1:
                 // transition from temp snapshot 
-                states.transition("one", cursor); 
+                manager.snapshots.transition("one", cursor); 
             break;
             
             case 2:
                 // transition from temp snapshot 
-                states.transition("two", cursor);
+                manager.snapshots.transition("two", cursor);
             break;
             
             case 3:
                 // transition between two snapshots
-                states.transition("one", "two", cursor);
+                manager.snapshots.transition("one", "two", cursor);
             break;
             
         }        
@@ -126,8 +126,10 @@ void ofApp::update(){
         if(cursor>1.0f){ cursor = 1.0f; }
     }
 
-    // updates simulation fbo
-    simulation.update();
+    manager.update( false ); // don't send dmx in this example
+    
+    // usually you call this
+    // manager.update();
 }
 
 //--------------------------------------------------------------
@@ -135,7 +137,7 @@ void ofApp::draw(){
     
     ofBackground(0);
     
-    simulation.draw();
+    manager.draw();
     
     positions.draw();
     gui.draw();
@@ -149,40 +151,40 @@ void ofApp::keyPressed(int key){
 
         case '1': 
             std::cout << "storing snapshot one\n";
-            states.store( "one"); 
+            manager.snapshots.store( "one"); 
         break;
         
         case '2': 
             std::cout << "storing snapshot two\n";
-            states.store( "two"); 
+            manager.snapshots.store( "two"); 
         break;
         
         case '3': 
             std::cout << "storing to temp snapshot\n";
-            states.store(); 
+            manager.snapshots.store(); 
         break;
         
         case 'q': 
             std::cout << "recalling snapshot one\n";
-            states.recall( "one"); 
+            manager.snapshots.recall( "one"); 
             bTargetDemo=false; 
         break;
         
         case 'w': 
             std::cout << "recalling snapshot two\n";
-            states.recall( "two"); 
+            manager.snapshots.recall( "two"); 
             bTargetDemo=false; 
         break;
         
         case 'e': 
             std::cout << "recalling temp snapshot\n";
-            states.recall(); 
+            manager.snapshots.recall(); 
             bTargetDemo=false; 
         break;
         
         case 'r': 
             std::cout<< "storing origin and transitioning to snapshot one\n";
-            states.storeOrigin(); // it is the same as .store() 
+            manager.snapshots.storeOrigin(); // it is the same as .store() 
             cursor = 0.0f;
             transitioning=1; 
             bTargetDemo=false; 
@@ -190,7 +192,7 @@ void ofApp::keyPressed(int key){
         
         case 't': 
             std::cout<< "storing origin and transitioning to snapshot two\n";
-            states.store(); // it is the same as .storeOrigin() 
+            manager.snapshots.store(); // it is the same as .storeOrigin() 
             cursor = 0.0f;
             transitioning=2; 
             bTargetDemo=false; 

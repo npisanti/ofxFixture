@@ -23,7 +23,7 @@ class ofApp: public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofx::fixture::Simulation simulation;
+        ofx::fixture::Manager fixtures;
 
         ofxDmx dmx;
 

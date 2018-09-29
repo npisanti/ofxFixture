@@ -8,12 +8,10 @@
 namespace ofx{ namespace fixture {
     
 class States {
+    friend class Manager;
 
 public:
     States();
-    
-    void add( Dimmer & dimmer );
-    void add( Head & head );
 
     void init( std::string tag );
     
@@ -48,6 +46,9 @@ public:
     } multiple;
     
 private: // ---------------------------------------------------------
+
+    void add( Dimmer & dimmer );
+    void add( Head & head );
 
     static inline float lerp( const ofParameter<float> & x0, const ofParameter<float> & x1, float pct ){
         return x0.get()*(1.0f-pct) + x1.get()*pct;

@@ -8,13 +8,14 @@ bool ofx::fixture::Dimmer::bSetupGLLights = false;
 
 ofx::fixture::Dimmer::Dimmer(){
 
+    changeDimmerName = false;
     bHasOptions = false;
     
     parameters.setName( "fixture base class" );
-    parameters.add( dimmer.set("dimmer", 1.0f, 0.0f, 1.0f) );
+    parameters.add( dimmer.set("dimmer", 0.0f, 0.0f, 1.0f) );
 
     installation.setName( "fixture base class pos" );
-    installation.add( armed.set("arm fixture", true ) );
+    installation.add( armed.set("armed dmx", true ) );
     position.addListener( this, &Dimmer::onPositionChanged);
     installation.add( position.set("position", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     orientation.addListener( this, &Dimmer::onOrientationChanged);
@@ -23,20 +24,14 @@ ofx::fixture::Dimmer::Dimmer(){
     fOptionals.clear();
     iOptionals.clear();
     bOptionals.clear();
+    
+    dmxBoundaryAdd = 0;
 }
 
 std::string ofx::fixture::Dimmer::fixtureName(){
     return "dimmer";
 }
 
-void ofx::fixture::Dimmer::update(){
-    if(armed) dmx->setLevel( channel, int( dimmer*255.0f ), universe );
-}
-
-void ofx::fixture::Dimmer::draw(){
-    // todo : add dimmer graphics 
-}
-    
 void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe, std::string name ){
     this->channel = channel;
     this->universe = universe;
@@ -46,11 +41,11 @@ void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe, std::
     
     if( name=="" ){
         parameters.setName( address+" " + fixtureName() );
-        dimmer.setName( address+" " + fixtureName() );
+        if(changeDimmerName) dimmer.setName( address+" " + fixtureName() );
         installation.setName( address+" " + fixtureName());
     }else{
         parameters.setName( name );
-        dimmer.setName( name );
+        if(changeDimmerName) dimmer.setName( name );
         installation.setName( name );
     }
     
@@ -63,6 +58,7 @@ void ofx::fixture::Dimmer::setup( ofxDmx & dmx, int channel, int universe, std::
     }
     
     init();
+    
 }
 
 void ofx::fixture::Dimmer::onPositionChanged( glm::vec3 & value ){
@@ -73,6 +69,9 @@ void ofx::fixture::Dimmer::onOrientationChanged( glm::vec3 & value ){
     node.setOrientation( value );
 }
 
+void ofx::fixture::Dimmer::setMaxDmxChannel( int max ){
+    dmxBoundaryAdd = max-1;
+}
 
 void ofx::fixture::Dimmer::setBoundaries( glm::vec3 dimensions ){ boundaries = dimensions; }
 
@@ -83,7 +82,6 @@ const glm::vec3 & ofx::fixture::Dimmer::getBoundaries(){ return boundaries; }
 const glm::vec3 & ofx::fixture::getBoundaries(){ return Dimmer::getBoundaries(); }
 void ofx::fixture::setBoundaries( glm::vec3 dimensions  ){ Dimmer::setBoundaries( dimensions ); }
 void ofx::fixture::setBoundaries( float w, float h, float d  ){ Dimmer::setBoundaries( w, h, d ); }
-
 
 
 void ofx::fixture::Dimmer::addOption( ofParameter<float> & parameter ){
@@ -102,4 +100,25 @@ void ofx::fixture::Dimmer::addOption( ofParameter<bool> & parameter ){
     options.add( parameter );
     bOptionals.push_back( &parameter );
     bHasOptions = true;
+}
+
+void ofx::fixture::Dimmer::checkDmxCollision( const Dimmer & other ){
+   
+    bool collision = false;
+    
+    int min0 = channel;
+    int max0 = channel + dmxBoundaryAdd;
+    
+    int min1 = other.channel;
+    int max1 = other.channel + other.dmxBoundaryAdd;
+    
+    if( (max0>=min1 && min0<max1) || (max1>=min0 && min1<max0) ){ collision = true; }
+
+    if( universe!= other.universe ){ collision = false; }
+    
+    if(collision){
+        ofLogWarning() << "[ofxFixture] dmx address collision between fixtures "<<parameters.getName() <<" and "<<other.parameters.getName()<<"\n";
+        ofLogWarning() << "disarming fixture "<<parameters.getName() <<"\n";
+        armed = false;
+    }
 }

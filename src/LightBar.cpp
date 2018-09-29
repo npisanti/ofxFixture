@@ -39,6 +39,7 @@ void ofx::fixture::LightBar::setNumLights( int num, bool reverse  ){
         addOption(lights[i].set("light "+ofToString(i), 1.0f, 0.0f, 1.0f) );
     }
 
+    setMaxDmxChannel( num );
 }
 
 

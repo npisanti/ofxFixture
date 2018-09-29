@@ -8,7 +8,8 @@
 namespace ofx{ namespace fixture {
     
 class Simulation {
-
+    friend class Manager;
+    
 public:  
     Simulation();
 
@@ -21,10 +22,8 @@ public:
         
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
-
-    void add( Dimmer & fixt ); 
     
-    virtual void drawObjects(){};
+    std::function<void()> customDrawRoutine;
     
     void update();
     void draw();
@@ -43,6 +42,8 @@ public:
     ofParameter<bool> bDrawFixturesName;
     
 private:
+    void add( Dimmer & fixt ); 
+    
     ofEasyCam camera;
     ofFbo fbo;
 

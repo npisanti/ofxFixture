@@ -5,12 +5,15 @@
             "chase_target": "1",
             "dimmer": "1",
             "green": "255",
-            "pan": "73.0903",
+            "pan": "73.0904",
             "red": "0",
             "target": "850.146, 0, 246.064",
             "tilt": "-43.7702",
             "white": "0",
             "zoom": "0"
+        },
+        "u1ch270_light_bar": {
+            "dimmer": "1"
         },
         "u1ch41_virtual_head": {
             "blue": "255",

@@ -69,7 +69,6 @@ ofx::fixture::Head::Head(){
 void ofx::fixture::Head::setup( ofxDmx & dmx, int channel, int universe, std::string name ) {
     target.set( target.getName(), target.get(), glm::vec3(0, 0, 0), boundaries );  
     Dimmer::setup( dmx, channel, universe, name );
-    dimmer.setName("dimmer");
 }
 
 void ofx::fixture::Head::setColor( const ofColor & color, bool alphaAsWhite ){
@@ -95,10 +94,6 @@ void ofx::fixture::Head::setTiltRange( float min, float max ){
 
 std::string ofx::fixture::Head::fixtureName(){
     return "virtual head";
-}
-
-void ofx::fixture::Head::update(){
-
 }
 
 void ofx::fixture::Head::enableLight(){ 

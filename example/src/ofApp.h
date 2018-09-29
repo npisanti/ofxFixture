@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "ofMain.h"
 #include "ofxFixture.h"
 #include "ofxGui.h"
@@ -21,7 +20,7 @@ class ofApp: public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         
-        ofx::fixture::Simulation simulation;
+        ofx::fixture::Manager manager;
 
         ofxDmx dmx;
         std::vector<ofx::fixture::Head> heads;
@@ -29,7 +28,7 @@ class ofApp: public ofBaseApp{
         
         ofx::fixture::LightBar bar;
         
-        ofx::fixture::States states;
+
         
         ofxPanel gui;
         ofxPanel positions;

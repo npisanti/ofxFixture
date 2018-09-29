@@ -9,6 +9,7 @@ namespace ofx { namespace fixture {
 class Dimmer {
     friend class States;
     friend class Simulation;
+    friend class Manager;
     
 public:
     Dimmer();
@@ -16,9 +17,9 @@ public:
     virtual void setup( ofxDmx & dmx, int channel, int universe=1, std::string name="" );
 
     virtual std::string fixtureName();
-    virtual void init(){}; // to send out default dmx messages
-    virtual void update();
-    virtual void draw();
+    virtual void init(){} // to send out default dmx messages
+    virtual void update(){}
+    virtual void draw(){}
     
     // enable and disable lights here, used by simulation
     virtual void enableLight(){}
@@ -43,7 +44,6 @@ public:
     static void setBoundaries( float w, float h, float d );
     static const glm::vec3 & getBoundaries();
 
-
 protected:
     // specificationCh is the channel in the fixture's dmx specifation
     inline void setDmx( int specificationCh, int value ){
@@ -55,11 +55,18 @@ protected:
     void addOption( ofParameter<int> & parameter );
     void addOption( ofParameter<bool> & parameter );
 
+    // you have to set this for automatic dmx collision detection
+    void setMaxDmxChannel( int max );
+
     ofNode node; 
     
     std::string address;
 
     static glm::vec3 boundaries;
+
+    // if you set this to true the dimmer parameter name will change
+    // to the same name as the fixture name
+    bool changeDimmerName; 
 
 private: 
 	int channel;
@@ -74,6 +81,8 @@ private:
     std::vector<ofParameter<bool>*>  bOptionals;
     bool bHasOptions;
 
+    int dmxBoundaryAdd;
+    void checkDmxCollision( const Dimmer & other );
 };    
 
 const glm::vec3 & getBoundaries();

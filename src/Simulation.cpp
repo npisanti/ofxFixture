@@ -8,7 +8,7 @@ ofx::fixture::Simulation::Simulation(){
     wallMaterial.setShininess( 50 );
     wallMaterial.setDiffuseColor(ofFloatColor::white);
     wallMaterial.setSpecularColor(ofColor(255, 255, 255, 255));
-    wallColor = ofColor( 10 );
+    wallColor = ofColor( 20 );
 
     floorMaterial.setShininess( 50 );
     floorMaterial.setDiffuseColor(ofFloatColor::white);
@@ -21,6 +21,8 @@ ofx::fixture::Simulation::Simulation(){
     setStage( 1600.0f, 800.0f, 1200.0f ); 
     
     bDrawFixturesName.set( "draw fixture name", false );
+
+    customDrawRoutine = []() noexcept {};
 
 }
 
@@ -111,7 +113,7 @@ void ofx::fixture::Simulation::update(){
                         wall.draw();
                     wallMaterial.end();
                     
-                    drawObjects();
+                    customDrawRoutine();
                     
                     for( auto & fixt : fixtures ){
                         fixt->disableLight();
@@ -131,7 +133,7 @@ void ofx::fixture::Simulation::update(){
                     ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
 
                     ofSetColor(255);
-                    drawObjects();
+                    customDrawRoutine();
                 }
 
                 // draw the origin 

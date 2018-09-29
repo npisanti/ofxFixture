@@ -13,6 +13,7 @@ public:
     std::string fixtureName() override;
 
     void draw() override;
+    void update() override;
 
     void enableLight();
     void disableLight();

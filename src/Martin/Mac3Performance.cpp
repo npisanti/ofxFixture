@@ -4,6 +4,7 @@
 ofx::fixture::Martin::Mac3Performance::Mac3Performance(){
     setPanRange( -270, 270 );
     setTiltRange( -134, 134 );
+    setMaxDmxChannel( 40 );
     
     addOption( temperature.set("color temperature", 0.0f, 0.0f, 1.0f) );
     addOption( focus.set("focus", 0.1f, 0.0f, 1.0f) );

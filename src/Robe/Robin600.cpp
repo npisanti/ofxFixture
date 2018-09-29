@@ -4,6 +4,7 @@
 ofx::fixture::Robe::Robin600::Robin600(){
     setPanRange( -225, 225 );
     setTiltRange( -150, 150 );
+    setMaxDmxChannel( 37 );
 }
 
 std::string ofx::fixture::Robe::Robin600::fixtureName(){

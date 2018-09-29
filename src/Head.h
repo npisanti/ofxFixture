@@ -34,7 +34,6 @@ public:
 
     std::string fixtureName() override;
     
-    void update() override;
     void draw() override;
     
     void enableLight() override;

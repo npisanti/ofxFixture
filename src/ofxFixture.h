@@ -5,6 +5,7 @@
 #include "Head.h"
 #include "Simulation.h"
 #include "States.h"
+#include "Manager.h"
 
 #include "Spot.h"
 #include "LightBar.h"

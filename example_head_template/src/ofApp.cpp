@@ -12,7 +12,7 @@ void ofApp::setup(){
 	//dmx.connect(0); // or use a number
      
     gui.setup("settings", "settings.xml", ofGetWidth()-220, 20 );
-    positions.setup("positions", "positions.xml", ofGetWidth()-440, 20 );
+    //positions.setup("positions", "positions.xml", ofGetWidth()-440, 20 );
 
     // -------------------- simulation ------------------------------  
    
@@ -21,31 +21,25 @@ void ofApp::setup(){
     float sh = 300.0f;
     float sd = 400.0f;
     
-    // boundaries for fixtures position and targets
-    ofx::fixture::setBoundaries( sw, sh, sd );
-    
-    simulation.setStage( sw, sh, sd ); // stage can be smaller than boundaries
-    simulation.setGraphics( 20, 20, 900, 800 );
+    fixtures.setup( dmx, sw, sh, sd );
+    fixtures.simulation.setGraphics( 20, 20, 900, 800 );
 
     
     // -------------------- head ------------------------------------
     head.setup( dmx, 1 );
     head.position.set( glm::vec3( sw*0.5f, sh, sd*0.75f) );
 
-    simulation.add( head ); 
+    fixtures.add( head ); 
     
-    positions.add( head.installation );
-    gui.add( head.parameters );
+    gui.add( fixtures.positions );
+    gui.add( fixtures.controls );
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-    head.update();
-    
-    // updates simulation fbo
-    simulation.update();
+
+    fixtures.update();
 }
 
 //--------------------------------------------------------------
@@ -53,27 +47,27 @@ void ofApp::draw(){
     
     ofBackground(0);
     
-    simulation.draw();
+    fixtures.draw();
     
-    positions.draw();
+    //positions.draw();
     gui.draw();
-}
-
-
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-    switch( key ){
-        
-    }    
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	dmx.clear();
-	dmx.update();
-	cout<<"clearing dmx...\n";
-	ofSleepMillis( 500 );
-	dmx.disconnect();
+    // close all the fixtures
+    // sometimes you don't want to call this,
+    // for example if you don't want to shut the lamps off
+    // when you just need to modify the program and restart it
+    fixtures.close(); 
+    
+    // remember to disconnect the dmx
+    dmx.disconnect();
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+
 }
 
 //--------------------------------------------------------------

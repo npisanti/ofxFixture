@@ -7,6 +7,8 @@ std::string ofx::fixture::Spot::fixtureName() {
 
 ofx::fixture::Spot::Spot(){
 
+    changeDimmerName = true;
+
     spot.setParent( node );
     
     spot.setResolution( 6, 1 );
@@ -27,8 +29,13 @@ ofx::fixture::Spot::Spot(){
     }
 
     installation.add( zoom.set("zoom", 0.1f, 0.0f, 1.0f) );
-}
     
+    setMaxDmxChannel(1);
+}
+
+void ofx::fixture::Spot::update(){
+    setDmx( 1, int( dimmer*255.0f ) );
+}    
 
 void ofx::fixture::Spot::draw() {
     ofSetColor(0);
