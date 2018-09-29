@@ -10,3 +10,8 @@ Default pan range runs from -180° to 180° clockwise as seen looking at the fix
 Tilt range is -180° to 180°, 0° is with the head pointed directly away from base, positive is tilting towards the head display and negative away from it. So the fixture points fully forward when pan is set to 0° and tilt is set to -90°, if the head display is towards you.
 
 So this kind of calibration works better with the fixture display pointed AWAY from the area you are wanting to cover with the head. The algorhytm for chasing the target tries to keep the tilt constant so when you are going outside the pan degrees it will rotate the head 360° to keep pointing at the target.
+
+
+CREDITS:
+
+The code for `ofx::fixture::Head' `panAngle()` and `tiltAngle()` is ported to glm from Shohei Fujimoto's [oF_movingLightHead_object](https://github.com/sfjmt/oF_movingLightHead_object).

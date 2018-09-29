@@ -1,4 +1,7 @@
 
+// the code for panAngle() and tiltAngle() is ported to glm from Shohei Fujimoto's oF_movingLightHead_object
+// https://github.com/sfjmt/oF_movingLightHead_object
+
 #pragma once 
 
 #include "Dimmer.h"
