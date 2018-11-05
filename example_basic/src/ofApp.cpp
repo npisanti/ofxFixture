@@ -52,6 +52,8 @@ void ofApp::setup(){
     heads[2].position.set( glm::vec3( sw*0.75f, sh, sd*0.75f) );
     heads[3].position.set( glm::vec3( sw*0.25f, sh, sd*0.75f) );
  
+    for( auto & head : heads ){ head.dimmer = 1.0f; }
+ 
     for( auto & fixt : heads ){ manager.add( fixt ); }
 
 

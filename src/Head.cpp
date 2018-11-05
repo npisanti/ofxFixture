@@ -206,6 +206,7 @@ float ofx::fixture::Head::panAngle( glm::vec3 v){
         return angle;
     }
     
+    // i had to modify this to get it working 
     if(v3.x <= 0.f && v3.y <= 0.f) {
         angle = abs(angle-90.f);
     } else if(v3.x <= 0.f && v3.y >= 0.f) {
@@ -215,7 +216,6 @@ float ofx::fixture::Head::panAngle( glm::vec3 v){
     }else{
         angle = angle - 90.0f;
     }
-    
     
     // voodoo code, still doesn't work for 1°-45°
     if( orientation.get().y != 0.0f ){ 
