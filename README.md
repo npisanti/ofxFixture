@@ -5,8 +5,7 @@ Addon to use multiple DMX fixtures with stage simulation. Still a work in progre
 
 It includes a `ofx::fixture::Manager` class that controls all the fixtures and has public objects inside to update many fixtures together, to show a really spartan 3d simulation and to store, load and transition between snapshots of the system.
 
-Screenshot of the included example:
-![example](screenshot.png?raw=true "example")
+![example](screenshot.jpg?raw=true "example")
 
 ### NOTES ON DEFAULT HEAD DEGREES
 Default pan range runs from -180° to 180° clockwise as seen looking at the fixture from the bottom of the base towards the yoke, as if the fixture was hanging downwards underneath you. 0° is with the head centered.
