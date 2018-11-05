@@ -29,6 +29,10 @@ Release*/
 
 # IDE-specific ignore patterns (e.g. user-specific files)
 
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
 #XCode
 *.pbxuser
 *.perspective

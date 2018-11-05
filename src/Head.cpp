@@ -35,9 +35,9 @@ ofx::fixture::Head::Head(){
     spot.setPosition( 0, -5, 0 );
         
     spot.setParent( head );
-    spot.tiltDeg(180);
+    //spot.tiltDeg(180);
     tip.setParent( spot );
-    tip.setPosition( 0, -15, 0 );
+    tip.setPosition( 0, 15, 0 );
     tip.set( 12, 4 );
 
     if( bSetupGLLights ){
@@ -215,7 +215,14 @@ float ofx::fixture::Head::panAngle( glm::vec3 v){
     }else{
         angle = angle - 90.0f;
     }
-
+    
+    
+    // voodoo code, still doesn't work for 1°-45°
+    if( orientation.get().y != 0.0f ){ 
+        angle += -orientation.get().y + 180.0f; 
+    } 
+    
+    
     //--calculate nearest angle to actual pan and check boundaries---
     float mindist = abs( pan-angle );
     float minangle = angle;
@@ -256,6 +263,8 @@ float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     
     angle -= 90.0f;
     
+    //angle += -orientation.get().x + 180.0f;
+    
     // change this with optimization for nearest point in range
     if( angle >= tiltMin && angle <= tiltMax)
     {
@@ -284,4 +293,3 @@ void ofx::fixture::Head::setSimulationLightDistanceRange( float zoomMax ){
     lightDistMin = 0.0f;
     lightDistMax = zoomMax;
 }
-

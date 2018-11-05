@@ -1,0 +1,43 @@
+{
+    "system_snapshot": {
+        "u1ch1_virtual_head": {
+            "blue": "0",
+            "chase_target": "1",
+            "dimmer": "1",
+            "green": "0",
+            "pan": "100.611",
+            "red": "255",
+            "target": "976.997, 0, 541.309",
+            "tilt": "-48.929",
+            "white": "0",
+            "zoom": "1"
+        },
+        "u1ch41_virtual_head": {
+            "blue": "0",
+            "chase_target": "1",
+            "dimmer": "1",
+            "green": "0",
+            "pan": "149.598",
+            "red": "255",
+            "target": "977, 0, 541.311",
+            "tilt": "-14.4582",
+            "white": "0",
+            "zoom": "1"
+        },
+        "u1ch79_spot": {
+            "u1ch79_spot": "1"
+        },
+        "u1ch84_spot": {
+            "u1ch84_spot": "1"
+        },
+        "u1ch85_spot": {
+            "u1ch85_spot": "0"
+        },
+        "u1ch89_spot": {
+            "u1ch89_spot": "0"
+        },
+        "u1ch97_spot": {
+            "u1ch97_spot": "0"
+        }
+    }
+}

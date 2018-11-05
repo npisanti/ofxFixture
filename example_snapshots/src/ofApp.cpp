@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
    
-    ofSetWindowTitle( "moving spot simulation" );
+    ofSetWindowTitle( "spots and snapshots" );
 	ofSetVerticalSync(true);
     
     gui.setup("settings", "settings.xml", ofGetWidth()-220, 20 );
@@ -12,7 +12,6 @@ void ofApp::setup(){
  
     transitioning = 0;
     cursor = 0.0f;
-
 
 
 	dmx.connect( "ttyUSB0", 512 ); // use the name
@@ -27,6 +26,13 @@ void ofApp::setup(){
     
     // ==== WARNING!!! call this function before all the others =====
     manager.setup( dmx, sw, sh, sd ); 
+    
+    
+    // this enable the use of GL lightning
+    // openGL supports only up to 8 lights
+    // so you can use this only with less then 8 fixtures 
+    manager.simulation.enableLighting();
+    
     // ==============================================================  
     
     // use this if you don't want simulated graphics 
@@ -39,14 +45,7 @@ void ofApp::setup(){
     // use this to change the floor or wall color
     // manager.simulation.setFloorColor( ofColor(40) );
     // manager.simulation.setWallColor( ofColor(255, 200, 200 ) );
-    
-    // -------------------- heads -----------------------------------
-    heads.resize(2);
-    heads[0].setup( dmx, 1 );
-    heads[0].position.set( glm::vec3( sw*0.25f, sh, sd*0.5f) );
-    heads[1].setup( dmx, 41 );
-    heads[1].position.set( glm::vec3( sw*0.75f, sh, sd*0.5f) );
- 
+
     // -------------------- spots ---------------------------------
     spots.resize(5);
     for( size_t i=0; i<spots.size(); ++i ){
@@ -58,15 +57,10 @@ void ofApp::setup(){
     spots[3].setup( dmx, 89 );
     spots[4].setup( dmx, 97 );
     
-    // --------------------- light bar ------------------------------
-    bar.setNumLights( 10 );
-    bar.setup( dmx, 270 );
-
     
     // ------------ add fixtures to manager -------------------------
-    for( auto & fixt : heads ){ manager.add( fixt ); }
     for( auto & fixt : spots ){ manager.add( fixt ); }
-    manager.add( bar );
+
 
     // ------------------ states ------------------------------------
     // init your snapshot only after you'added all the heads 
@@ -89,16 +83,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-    if( bTargetDemo ){ // chase a noise generated target 
-        for( auto & head : heads ){
-            head.setTarget( glm::vec3( 
-                    ofNoise(ofGetElapsedTimef()*0.08f, 0) * 1200.0f, 
-                    0.0f,
-                    ofNoise(ofGetElapsedTimef()*0.08f, 2) * 800.0f
-            ));        
-        }        
-    }
     
     // transition routines 
     if(transitioning){
@@ -130,6 +114,7 @@ void ofApp::update(){
     
     // usually you call this
     // manager.update();
+    
 }
 
 //--------------------------------------------------------------
@@ -141,6 +126,19 @@ void ofApp::draw(){
     
     positions.draw();
     gui.draw();
+    
+    
+    std::string info = "1 - store snapshot one\n";
+    info +="2 - store snapshot two\n";
+    info +="3 - store to origin snapshot\n";
+    info += "q - recall snapshot one\n";
+    info += "w - recall snapshot two\n";
+    info += "e - recall origin snapshot\n";
+    info += "r - store origin and transition to snapshot one\n";
+    info += "t - store origin and transition to snapshot two\n";
+    info += "y - transition from snapshot one to snapshot two\n";
+    
+    ofDrawBitmapString( info, 30, 40 );
 }
 
 
@@ -204,9 +202,7 @@ void ofApp::keyPressed(int key){
             transitioning=3; 
             bTargetDemo=false; 
         break;
-        
-
-        
+    
     }
     
 }

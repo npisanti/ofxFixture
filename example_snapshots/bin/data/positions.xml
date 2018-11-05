@@ -47,32 +47,32 @@
 		<u1ch79_spot>
 			<armed_dmx>1</armed_dmx>
 			<position>135.393, 600, 400</position>
-			<orientation>180, 180, 0</orientation>
-			<zoom>0.1</zoom>
+			<orientation>90, 180, 0</orientation>
+			<zoom>0.260725</zoom>
 		</u1ch79_spot>
 		<u1ch84_spot>
 			<armed_dmx>1</armed_dmx>
 			<position>422.263, 600, 400</position>
-			<orientation>180, 180, 0</orientation>
-			<zoom>0.1</zoom>
+			<orientation>90, 180, 0</orientation>
+			<zoom>0.146189</zoom>
 		</u1ch84_spot>
 		<u1ch85_spot>
 			<armed_dmx>1</armed_dmx>
 			<position>664.509, 600, 400</position>
-			<orientation>180, 180, 0</orientation>
-			<zoom>0.1</zoom>
+			<orientation>90, 180, 0</orientation>
+			<zoom>0.474177</zoom>
 		</u1ch85_spot>
 		<u1ch89_spot>
 			<armed_dmx>1</armed_dmx>
 			<position>1008.75, 600, 400</position>
-			<orientation>180, 180, 0</orientation>
-			<zoom>0.1</zoom>
+			<orientation>90, 180, 0</orientation>
+			<zoom>0.34923</zoom>
 		</u1ch89_spot>
 		<u1ch97_spot>
 			<armed_dmx>1</armed_dmx>
 			<position>1200, 600, 400</position>
-			<orientation>180, 180, 0</orientation>
-			<zoom>0.1</zoom>
+			<orientation>119.029, 159.191, 0</orientation>
+			<zoom>0.317993</zoom>
 		</u1ch97_spot>
 		<u1ch270_light_bar>
 			<armed_dmx>1</armed_dmx>

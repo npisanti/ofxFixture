@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<positions>
+	<u1ch1_virtual_head>
+		<position>300, 600, 400</position>
+		<orientation>180, 180, 0</orientation>
+	</u1ch1_virtual_head>
+	<u1ch41_virtual_head>
+		<position>900, 600, 400</position>
+		<orientation>180, 180, 0</orientation>
+	</u1ch41_virtual_head>
+	<u1ch79_spot>
+		<position>137.943, 600, 570.929</position>
+		<orientation>90, 180, 0</orientation>
+		<zoom>0.1</zoom>
+	</u1ch79_spot>
+	<u1ch84_spot>
+		<position>331.612, 600, 233.569</position>
+		<orientation>90, 180, 0</orientation>
+		<zoom>0.1</zoom>
+	</u1ch84_spot>
+	<u1ch85_spot>
+		<position>600, 600, 437.651</position>
+		<orientation>90, 180, 0</orientation>
+		<zoom>0.1</zoom>
+	</u1ch85_spot>
+	<u1ch89_spot>
+		<position>843.898, 600, 545.939</position>
+		<orientation>90, 180, 0</orientation>
+		<zoom>0.1</zoom>
+	</u1ch89_spot>
+	<u1ch97_spot>
+		<position>1062.56, 600, 316.868</position>
+		<orientation>90, 180, 0</orientation>
+		<zoom>0.1</zoom>
+	</u1ch97_spot>
+	<fixtures_positions>
+		<u1ch1_virtual_head>
+			<armed_dmx>1</armed_dmx>
+			<position>300, 600, 200</position>
+			<orientation>180, 180, 0</orientation>
+		</u1ch1_virtual_head>
+		<u1ch41_virtual_head>
+			<armed_dmx>1</armed_dmx>
+			<position>900, 600, 200</position>
+			<orientation>180, 180, 0</orientation>
+		</u1ch41_virtual_head>
+		<u1ch79_spot>
+			<armed_dmx>1</armed_dmx>
+			<position>135.393, 600, 400</position>
+			<orientation>180, 180, 0</orientation>
+			<zoom>0.1</zoom>
+		</u1ch79_spot>
+		<u1ch84_spot>
+			<armed_dmx>1</armed_dmx>
+			<position>422.263, 600, 400</position>
+			<orientation>180, 180, 0</orientation>
+			<zoom>0.1</zoom>
+		</u1ch84_spot>
+		<u1ch85_spot>
+			<armed_dmx>1</armed_dmx>
+			<position>664.509, 600, 400</position>
+			<orientation>180, 180, 0</orientation>
+			<zoom>0.1</zoom>
+		</u1ch85_spot>
+		<u1ch89_spot>
+			<armed_dmx>1</armed_dmx>
+			<position>1008.75, 600, 400</position>
+			<orientation>180, 180, 0</orientation>
+			<zoom>0.1</zoom>
+		</u1ch89_spot>
+		<u1ch97_spot>
+			<armed_dmx>1</armed_dmx>
+			<position>1200, 600, 400</position>
+			<orientation>180, 180, 0</orientation>
+			<zoom>0.1</zoom>
+		</u1ch97_spot>
+		<u1ch270_light_bar>
+			<armed_dmx>1</armed_dmx>
+			<position>600, 300, 0</position>
+			<orientation>180, 360, 0</orientation>
+		</u1ch270_light_bar>
+		<u1ch81_virtual_head>
+			<armed_dmx>1</armed_dmx>
+			<position>900, 600, 600</position>
+			<orientation>180, 180, 0</orientation>
+		</u1ch81_virtual_head>
+		<u1ch121_virtual_head>
+			<armed_dmx>1</armed_dmx>
+			<position>300, 600, 600</position>
+			<orientation>180, 180, 0</orientation>
+		</u1ch121_virtual_head>
+	</fixtures_positions>
+</positions>

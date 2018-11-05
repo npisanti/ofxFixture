@@ -23,11 +23,13 @@ void ofApp::setup(){
     
     fixtures.setup( dmx, sw, sh, sd );
     fixtures.simulation.setGraphics( 20, 20, 900, 800 );
-
+    
     
     // -------------------- head ------------------------------------
     head.setup( dmx, 1 );
     head.position.set( glm::vec3( sw*0.5f, sh, sd*0.75f) );
+    
+    head.dimmer = 1.0f;
 
     fixtures.add( head ); 
     

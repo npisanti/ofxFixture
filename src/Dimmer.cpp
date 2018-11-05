@@ -19,7 +19,7 @@ ofx::fixture::Dimmer::Dimmer(){
     position.addListener( this, &Dimmer::onPositionChanged);
     installation.add( position.set("position", glm::vec3(0, 0, 0 ), glm::vec3(0,0,0), boundaries ) );
     orientation.addListener( this, &Dimmer::onOrientationChanged);
-    installation.add( orientation.set("orientation", glm::vec3(180, 180, 0 ), glm::vec3(0, 0, 0), glm::vec3(360, 360, 0) ) );
+    installation.add( orientation.set("orientation", glm::vec3(180, 180, 0 ), glm::vec3(0, 0, 0), glm::vec3(360, 360, 360) ) );
     
     fOptionals.clear();
     iOptionals.clear();
