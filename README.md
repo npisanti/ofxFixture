@@ -22,6 +22,9 @@ orientation.z = 0°
 ```
 It means that you can use it when your fixtures has the base on the floor or on the ceiling, but not fixed on the side. If you want to improve the code for chasing a target, i'm open to contributions.
 
+### DEPENDENCIES: 
+[ofxDmx](https://github.com/kylemcdonald/ofxDmx/) is required. If it isn't working at the moment, check out [my fork](https://github.com/npisanti/ofxDmx/).
+
 ### CREDITS:
 The code for `ofx::fixture::Head` `panAngle()` and `tiltAngle()` is ported to `glm` from Shohei Fujimoto's [oF_movingLightHead_object](https://github.com/sfjmt/oF_movingLightHead_object).
 
