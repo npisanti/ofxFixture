@@ -69,10 +69,10 @@ void ofx::fixture::Manager::draw(){
 
 void ofx::fixture::Manager::close(){
     
-    ofLogNotice()<<"[ofxFixture] clearing dmx...\n";
+    ofLogNotice()<<"[ofxFixture] closing heads...";
     for( auto & fixt : snapshots.heads ){ fixt->close(); }
 
-	ofLogNotice()<<"[ofxFixture] clearing dmx...\n";    
+	ofLogNotice()<<"[ofxFixture] clearing dmx...";    
 	dmx->clear();
 	dmx->update();
 	ofSleepMillis( 200 );
