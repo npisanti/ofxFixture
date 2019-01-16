@@ -20,6 +20,7 @@ public:
     virtual void init(){} // to send out default dmx messages
     virtual void update(){}
     virtual void draw(){}
+    virtual void draw2D( float scale );
     
     // enable and disable lights here, used by simulation
     virtual void enableLight(){}
@@ -90,4 +91,3 @@ void setBoundaries( glm::vec3 dimensions );
 void setBoundaries( float w, float h, float d  );
     
 }}
-

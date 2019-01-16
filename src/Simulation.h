@@ -19,7 +19,8 @@ public:
     void disableLighting();
     
     void setStage( float stageWidht, float stageHeight, float stageDepth );
-        
+    
+    void enable3DGraphics( bool active );
     void setGraphics( int x, int y, int w, int h );
     void moveGraphics( int x, int y );
     
@@ -63,6 +64,8 @@ private:
     bool bActive;
     
     bool bUseLights;
+    
+    bool use3dGraphics;
     
 };
     

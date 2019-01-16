@@ -24,8 +24,12 @@ ofx::fixture::Simulation::Simulation(){
 
     customDrawRoutine = []() noexcept {};
 
+    use3dGraphics = true;
 }
 
+void ofx::fixture::Simulation::enable3DGraphics( bool active ){
+    use3dGraphics = active;
+}
 
 void ofx::fixture::Simulation::enableLighting(){
     bUseLights = true;
@@ -76,75 +80,100 @@ void ofx::fixture::Simulation::add( Dimmer & fixt ){
 void ofx::fixture::Simulation::update(){
    
     if( bActive ){
-        camera.setTarget( glm::vec3( getBoundaries().x*0.5f, 0.0f, 0.0f ));
-        
-        fbo.begin();
-        
-            ofClear(0, 0, 0, 0);
+        if( use3dGraphics ){ // ------------- 3D GRAPHICS
+            camera.setTarget( glm::vec3( getBoundaries().x*0.5f, 0.0f, 0.0f ));
+            
+            fbo.begin();
+            
+                ofClear(0, 0, 0, 0);
+                ofPushStyle();
+                ofEnableDepthTest();
+
+                camera.begin();
+
+                    for( auto & fixt : fixtures ){
+                        fixt->draw();
+                        if( Dimmer::bDrawAddress ){
+                            ofSetColor( 255);    
+                            ofDrawBitmapString( fixt->address, fixt->node.getPosition());             
+                        }
+                        if( bDrawFixturesName ){
+                            ofSetColor( 255, 0, 0 );    
+                            ofDrawBitmapString( fixt->parameters.getName(), fixt->node.getPosition());             
+                        }
+                    }
+
+                    if( bUseLights ){
+                        
+                        ofEnableLighting();
+                        for( auto & fixt : fixtures ){
+                            fixt->enableLight();
+                        }                
+                        
+                        floorMaterial.begin();
+                            floor.draw();
+                        floorMaterial.end();
+
+                        wallMaterial.begin();
+                            wall.draw();
+                        wallMaterial.end();
+                        
+                        customDrawRoutine();
+                        
+                        for( auto & fixt : fixtures ){
+                            fixt->disableLight();
+                        }
+                        ofDisableLighting();      
+                                    
+                    }else{
+
+                        ofSetColor( floorColor );
+                        floor.draw();
+                        ofSetColor( wallColor );
+                        wall.draw();
+
+                        // draw lines in the floor borders
+                        ofSetColor(0);
+                        ofSetLineWidth( 2.0f );
+                        ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
+
+                        ofSetColor(255);
+                        customDrawRoutine();
+                    }
+
+                    // draw the origin 
+                    ofSetColor( 255 );
+                    ofDrawSphere( 0, 0, 0, 5);
+                    
+                camera.end();
+
+                ofDisableDepthTest();
+                ofPopStyle();
+            fbo.end();            
+        }else{ // ------------- 2D GRAPHICS
+            float scale = fbo.getWidth() / getBoundaries().x;
+            fbo.begin();
             ofPushStyle();
-            ofEnableDepthTest();
-
-            camera.begin();
-
+                ofClear(0, 0, 0, 0);
                 for( auto & fixt : fixtures ){
-                    fixt->draw();
+                    fixt->draw2D( scale );
+                    
+                    float x = fixt->node.getPosition().x * scale + 6.0f;
+                    float y = fixt->node.getPosition().z * scale;
                     if( Dimmer::bDrawAddress ){
                         ofSetColor( 255);    
-                        ofDrawBitmapString( fixt->address, fixt->node.getPosition());             
+                        ofDrawBitmapString( fixt->address, x,y );             
                     }
                     if( bDrawFixturesName ){
                         ofSetColor( 255, 0, 0 );    
-                        ofDrawBitmapString( fixt->parameters.getName(), fixt->node.getPosition());             
+                        ofDrawBitmapString( fixt->parameters.getName(), x, y ); 
                     }
                 }
-
-                if( bUseLights ){
-                    
-                    ofEnableLighting();
-                    for( auto & fixt : fixtures ){
-                        fixt->enableLight();
-                    }                
-                    
-                    floorMaterial.begin();
-                        floor.draw();
-                    floorMaterial.end();
-
-                    wallMaterial.begin();
-                        wall.draw();
-                    wallMaterial.end();
-                    
-                    customDrawRoutine();
-                    
-                    for( auto & fixt : fixtures ){
-                        fixt->disableLight();
-                    }
-                    ofDisableLighting();      
-                                  
-                }else{
-
-                    ofSetColor( floorColor );
-                    floor.draw();
-                    ofSetColor( wallColor );
-                    wall.draw();
-
-                    // draw lines in the floor borders
-                    ofSetColor(0);
-                    ofSetLineWidth( 2.0f );
-                    ofDrawLine( 0, 0, 2, getBoundaries().x, 0, 2 ); 
-
-                    ofSetColor(255);
-                    customDrawRoutine();
-                }
-
-                // draw the origin 
-                ofSetColor( 255 );
-                ofDrawSphere( 0, 0, 0, 5);
-                
-            camera.end();
-
-            ofDisableDepthTest();
             ofPopStyle();
-        fbo.end();
+            fbo.end();  
+        }
+        
+
     }
 }
 

@@ -293,3 +293,16 @@ void ofx::fixture::Head::setSimulationLightDistanceRange( float zoomMax ){
     lightDistMin = 0.0f;
     lightDistMax = zoomMax;
 }
+
+void ofx::fixture::Head::draw2D( float scale ){
+    static const float side =     12.0f;
+    static constexpr float half = 12.0f * 0.5f;
+    float x = position.get().x * scale - half;
+    float y = position.get().z * scale - half;
+    ofSetColor( red, blue, green, 255 * dimmer );
+    ofFill();
+    ofDrawCircle( x, y, side );
+    ofSetColor(255);
+    ofNoFill();
+    ofDrawCircle( x, y, side );
+}

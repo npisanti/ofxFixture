@@ -122,3 +122,16 @@ void ofx::fixture::Dimmer::checkDmxCollision( const Dimmer & other ){
         armed = false;
     }
 }
+
+void ofx::fixture::Dimmer::draw2D( float scale ){
+    static const float side =     8.0f;
+    static constexpr float half = 8.0f * 0.5f;
+    float x = position.get().x * scale  - half;
+    float y = position.get().z * scale - half;
+    ofSetColor( 255 * dimmer );
+    ofFill();
+    ofDrawRectangle( x, y, side, side );
+    ofSetColor(255);
+    ofNoFill();
+    ofDrawRectangle( x, y, side, side );
+}

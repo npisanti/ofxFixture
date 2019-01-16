@@ -36,6 +36,9 @@ void ofApp::setup(){
     manager.simulation.setGraphics( 20, 20, 900, 800 ); 
     manager.simulation.setDrawAddress( true );
     
+    // use minimal 2d graphics 
+    //manager.simulation.enable3DGraphics( false ); 
+        
     // use this to change the floor or wall color
     // manager.simulation.setFloorColor( ofColor(40) );
     // manager.simulation.setWallColor( ofColor(255, 200, 200 ) );

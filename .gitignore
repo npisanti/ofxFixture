@@ -1,39 +1,39 @@
+#########################
+# general patterns
+#########################
 
-# custom exclusions for ofxPDSP
-
-mapping.xml
-
-
-# Some general ignore patterns
+docs/html
+docs/tagfile.xml
 
 */bin/*
 !*/bin/data/
+
 # for bin folder in root
 /bin/*
 !/bin/data/
 
-app_video_sampler/bin/data/*
-app_cheap_chroma/bin/data/*.png
-
-app_globals/bin/data/*.xml
-
-build/
-obj/
+[Bb]uild/
+[Oo]bj/
 *.o
-Debug*/
-Release*/
+[Dd]ebug*/
+[Rr]elease*/
 *.mode*
 *.app/
 *.pyc
 .svn/
 
-# IDE-specific ignore patterns (e.g. user-specific files)
+#########################
+# IDE
+#########################
 
 # Visual Studio Code
 .vscode/
 *.code-workspace
+GPATH
+GRTAGS
+GTAGS
 
-#XCode
+# XCode
 *.pbxuser
 *.perspective
 *.perspectivev3
@@ -43,43 +43,48 @@ Release*/
 xcuserdata
 *.xcworkspace
 
-#Code::Blocks
+# Code::Blocks
 *.depend
 *.layout
 *.cbTemp
 
-#Visual Studio
+# Visual Studio
 *.sdf
 *.opensdf
 *.suo
+*.pdb
+*.ilk
+*.aps
 ipch/
 
-#Eclipse
+# Eclipse
 .metadata
 local.properties
 .externalToolBuilders
 
-
-#codelite
+# Codelite
 *.session
 *.tags
 *.workspace.*
 
-# OS-specific ignore patterns
+#########################
+# operating system
+#########################
 
-#Linux
+# Linux
 *~
 # KDE
 .directory
+.AppleDouble
 
-#OSX
+# OSX
 .DS_Store
 *.swp
 *~.nib
 # Thumbnails
 ._*
 
-#Windows
+# Windows
 # Windows image file caches
 Thumbs.db
 # Folder config file
@@ -88,7 +93,10 @@ Desktop.ini
 #Android
 .csettings
 
-# Packages
+#########################
+# packages
+#########################
+
 # it's better to unpack these files and commit the raw source
 # git has its own built in compression methods
 *.7z

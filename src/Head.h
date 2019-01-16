@@ -38,6 +38,7 @@ public:
     std::string fixtureName() override;
     
     void draw() override;
+    void draw2D( float scale ) override;
     
     void enableLight() override;
     void disableLight() override;

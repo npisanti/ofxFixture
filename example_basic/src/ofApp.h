@@ -24,11 +24,6 @@ class ofApp: public ofBaseApp{
 
         ofxDmx dmx;
         std::vector<ofx::fixture::Head> heads;
-        std::vector<ofx::fixture::Spot> spots;
-        
-        ofx::fixture::LightBar bar;
-        
-
         
         ofxPanel gui;
         ofxPanel positions;
