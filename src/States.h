@@ -24,6 +24,9 @@ public:
     void transition( std::string tagA, std::string tagB, float pct );
     void transition( std::string tag, float pct );
     
+    void fade( std::string tag, float pct ); // fade from zero
+    void black(); // all the fixtures' dimmers to zero
+    
     void storeOrigin();
     void storeDestination();    
     void transition( float pct ); // from origin to destination
@@ -59,6 +62,7 @@ private: // ---------------------------------------------------------
         void store( Dimmer & dimmer );
         void recall( Dimmer & dimmer );
         void mix( Dimmer & dimmer, DimmerSnapshot & other, float pct );
+        void fade( Dimmer & dimmer, float pct );
         
         ofParameterGroup parameters;
             ofParameter<float> dimmer;
@@ -72,6 +76,7 @@ private: // ---------------------------------------------------------
         void store( Head & head );
         void recall( Head & head );
         void mix( Head & head, HeadSnapshot & other, float pct );
+        void fade( Head & head, float pct );
         
         ofParameterGroup parameters;
             ofParameter<float> dimmer;
@@ -108,6 +113,7 @@ private: // ---------------------------------------------------------
     void store( SystemSnapshot & snap );
     void recall( SystemSnapshot & snap );
     void transition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct );
+    void fade( SystemSnapshot & snap, float pct );
     
     bool bTouching;
     

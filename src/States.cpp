@@ -35,11 +35,11 @@ ofx::fixture::States::States(){
 }
 
 
-void ofx::fixture::States::init( std::string statename ){
+void ofx::fixture::States::init( std::string tag ){
     bTouching = true;
     
-    snapshots.insert( std::make_pair( statename, SystemSnapshot() ));
-    SystemSnapshot & snap = snapshots[statename];
+    snapshots.insert( std::make_pair( tag, SystemSnapshot() ));
+    SystemSnapshot & snap = snapshots[tag];
 
     snap.heads.resize( heads.size() );
     for( size_t i=0; i<heads.size(); ++i ){
@@ -53,58 +53,75 @@ void ofx::fixture::States::init( std::string statename ){
         snap.system.add( snap.dimmers[i].parameters );
     }
 
-    std::string path = ofToDataPath( "snapshots/"+statename+".json" );
+    std::string path = ofToDataPath( "snapshots/"+tag+".json" );
 
 	ofFile file( path );
 	if( file.exists() ){
-        ofLogVerbose() << "found file for state name = "<<statename<<", loading";
+        ofLogVerbose() << "found file for state name = "<<tag<<", loading";
         ofJson json = ofLoadJson( path );
         ofDeserialize( json, snap.system );
     }else{
-        ofLogVerbose() << "file not found for state name = "<<statename;
+        ofLogVerbose() << "file not found for state name = "<<tag;
     }
 }
 
 
-void ofx::fixture::States::store( std::string statename ){
-    if( snapshots.count( statename ) >0 ){
-        SystemSnapshot & snap = snapshots[statename]; 
+void ofx::fixture::States::store( std::string tag ){
+    if( snapshots.count( tag ) >0 ){
+        SystemSnapshot & snap = snapshots[tag]; 
         store( snap );
         
         ofJson json;
         
         ofSerialize( json, snap.system );
-        std::string path = ofToDataPath( "snapshots/"+statename+".json" );
+        std::string path = ofToDataPath( "snapshots/"+tag+".json" );
         ofSavePrettyJson( path, json );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::recall( std::string statename ){
-    if( snapshots.count( statename ) >0 ){
-        recall( snapshots[statename] );
+void ofx::fixture::States::recall( std::string tag ){
+    if( snapshots.count( tag ) >0 ){
+        recall( snapshots[tag] );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::transition( std::string statenameA, std::string statenameB, float pct ){
-    if( snapshots.count( statenameA ) >0 && snapshots.count( statenameB ) ){
-        transition( snapshots[statenameA], snapshots[statenameB], pct );
+void ofx::fixture::States::transition( std::string tagA, std::string tagB, float pct ){
+    if( snapshots.count( tagA ) >0 && snapshots.count( tagB ) ){
+        transition( snapshots[tagA], snapshots[tagB], pct );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
 }
 
-void ofx::fixture::States::transition( std::string statename, float pct ){
-    if( snapshots.count( statename ) >0 ){
-        transition( origin, snapshots[statename], pct );
+void ofx::fixture::States::transition( std::string tag, float pct ){
+    if( snapshots.count( tag ) >0 ){
+        transition( origin, snapshots[tag], pct );
     }else{
-        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string statename ) before storing or recalling";
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
 }
 
+void ofx::fixture::States::fade( std::string tag, float pct ){
+    if( snapshots.count( tag ) >0 ){
+        fade( snapshots[tag], pct );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
+void ofx::fixture::States::black(){
+    for( size_t i=0; i<heads.size(); ++i ){
+        heads[i]->dimmer = 0.0f;
+    }
+    for( size_t i=0; i<dimmers.size(); ++i ){
+        dimmers[i]->dimmer = 0.0f;
+    }
+}
+    
 void ofx::fixture::States::transition( float pct ){
     transition( origin, destination, pct );
 }
@@ -149,6 +166,15 @@ void ofx::fixture::States::transition( SystemSnapshot & snapA, SystemSnapshot & 
     }
     for( size_t i=0; i<dimmers.size(); ++i ){
         snapA.dimmers[i].mix( *dimmers[i], snapB.dimmers[i], pct );
+    }
+}
+
+void ofx::fixture::States::fade( SystemSnapshot & snap, float pct ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        snap.heads[i].fade( *heads[i], pct );
+    }
+    for( size_t i=0; i<dimmers.size(); ++i ){
+        snap.dimmers[i].fade( *dimmers[i], pct );
     }
 }
     
@@ -241,6 +267,10 @@ void ofx::fixture::States::DimmerSnapshot::mix( Dimmer & dimmer, DimmerSnapshot 
         dimmer.iOptionals[i]->set( lerp( float(iOptions[i].get()), float(other.iOptions[i].get()), pct ) ); 
     }
     for( size_t i = 0; i<bOptions.size(); ++i ){ dimmer.bOptionals[i]->set( bOptions[i].get()); }
+}
+
+void ofx::fixture::States::DimmerSnapshot::fade( Dimmer & dimmer, float pct ){
+    dimmer.dimmer = this->dimmer*pct;
 }
 
 void ofx::fixture::States::HeadSnapshot::init( Head & head ){
@@ -343,6 +373,10 @@ void ofx::fixture::States::HeadSnapshot::mix( Head & head, HeadSnapshot & other,
         head.iOptionals[i]->set( lerp( float(iOptions[i].get()), float(other.iOptions[i].get()), pct ) ); 
     }
     for( size_t i = 0; i<bOptions.size(); ++i ){ head.bOptionals[i]->set( bOptions[i].get()); }
+}
+
+void ofx::fixture::States::HeadSnapshot::fade( Head & head, float pct ){
+    head.dimmer = this->dimmer * pct;
 }
 
 
