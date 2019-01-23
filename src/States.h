@@ -25,6 +25,7 @@ public:
     void transition( std::string tag, float pct );
     
     void fade( std::string tag, float pct ); // fade from zero
+    void fade(float pct ); // fades origin snap ( 0.0f is black )
     void black(); // all the fixtures' dimmers to zero
     
     void storeOrigin();

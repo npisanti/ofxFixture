@@ -36,32 +36,37 @@ ofx::fixture::States::States(){
 
 
 void ofx::fixture::States::init( std::string tag ){
-    bTouching = true;
     
-    snapshots.insert( std::make_pair( tag, SystemSnapshot() ));
-    SystemSnapshot & snap = snapshots[tag];
+    if( snapshots.count( tag ) == 0 ){
+        bTouching = true;
+        
+        snapshots.insert( std::make_pair( tag, SystemSnapshot() ));
+        SystemSnapshot & snap = snapshots[tag];
 
-    snap.heads.resize( heads.size() );
-    for( size_t i=0; i<heads.size(); ++i ){
-        snap.heads[i].init( *heads[i] );
-        snap.system.add( snap.heads[i].parameters );
-    }
+        snap.heads.resize( heads.size() );
+        for( size_t i=0; i<heads.size(); ++i ){
+            snap.heads[i].init( *heads[i] );
+            snap.system.add( snap.heads[i].parameters );
+        }
 
-    snap.dimmers.resize( dimmers.size() );
-    for( size_t i=0; i<dimmers.size(); ++i ){
-        snap.dimmers[i].init( *dimmers[i] );
-        snap.system.add( snap.dimmers[i].parameters );
-    }
+        snap.dimmers.resize( dimmers.size() );
+        for( size_t i=0; i<dimmers.size(); ++i ){
+            snap.dimmers[i].init( *dimmers[i] );
+            snap.system.add( snap.dimmers[i].parameters );
+        }
 
-    std::string path = ofToDataPath( "snapshots/"+tag+".json" );
+        std::string path = ofToDataPath( "snapshots/"+tag+".json" );
 
-	ofFile file( path );
-	if( file.exists() ){
-        ofLogVerbose() << "found file for state name = "<<tag<<", loading";
-        ofJson json = ofLoadJson( path );
-        ofDeserialize( json, snap.system );
+        ofFile file( path );
+        if( file.exists() ){
+            ofLogVerbose() << "[ofx::fixture::States] found file for state name = "<<tag<<", loading";
+            ofJson json = ofLoadJson( path );
+            ofDeserialize( json, snap.system );
+        }else{
+            ofLogVerbose() << "[ofx::fixture::States] ile not found for state name = "<<tag;
+        }                
     }else{
-        ofLogVerbose() << "file not found for state name = "<<tag;
+        ofLogVerbose() << "[ofx::fixture::States] tag "<< tag <<" already initialized";
     }
 }
 
@@ -111,6 +116,10 @@ void ofx::fixture::States::fade( std::string tag, float pct ){
     }else{
         ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
+}
+
+void ofx::fixture::States::fade( float pct ){
+    fade( origin, pct );
 }
 
 void ofx::fixture::States::black(){
