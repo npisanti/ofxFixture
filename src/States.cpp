@@ -94,6 +94,22 @@ void ofx::fixture::States::recall( std::string tag ){
     }
 }
 
+void ofx::fixture::States::lightsRecall( std::string tag ){
+    if( snapshots.count( tag ) >0 ){
+        lightsRecall( snapshots[tag] );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
+void ofx::fixture::States::degreesRecall( std::string tag ){
+    if( snapshots.count( tag ) >0 ){
+        degreesRecall( snapshots[tag] );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
 void ofx::fixture::States::transition( std::string tagA, std::string tagB, float pct ){
     if( snapshots.count( tagA ) >0 && snapshots.count( tagB ) ){
         transition( snapshots[tagA], snapshots[tagB], pct );
@@ -102,9 +118,41 @@ void ofx::fixture::States::transition( std::string tagA, std::string tagB, float
     }
 }
 
+void ofx::fixture::States::lightsTransition( std::string tagA, std::string tagB, float pct ){
+    if( snapshots.count( tagA ) >0 && snapshots.count( tagB ) ){
+        lightsTransition( snapshots[tagA], snapshots[tagB], pct );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
+void ofx::fixture::States::degreesTransition( std::string tagA, std::string tagB, float pct ){
+    if( snapshots.count( tagA ) >0 && snapshots.count( tagB ) ){
+        degreesTransition( snapshots[tagA], snapshots[tagB], pct );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
 void ofx::fixture::States::transition( std::string tag, float pct ){
     if( snapshots.count( tag ) >0 ){
         transition( origin, snapshots[tag], pct );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
+void ofx::fixture::States::lightsTransition( std::string tag, float pct ){
+    if( snapshots.count( tag ) >0 ){
+        lightsTransition( origin, snapshots[tag], pct );
+    }else{
+        ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
+    }
+}
+
+void ofx::fixture::States::degreesTransition( std::string tag, float pct ){
+    if( snapshots.count( tag ) >0 ){
+        degreesTransition( origin, snapshots[tag], pct );
     }else{
         ofLogWarning()<< "[ofx::fixture::States] snapshot with given state name not initialized, use init( std::string tag ) before storing or recalling";
     }
@@ -134,6 +182,14 @@ void ofx::fixture::States::black(){
 void ofx::fixture::States::transition( float pct ){
     transition( origin, destination, pct );
 }
+    
+void ofx::fixture::States::lightsTransition( float pct ){
+    lightsTransition( origin, destination, pct );
+}
+    
+void ofx::fixture::States::degreesTransition( float pct ){
+    degreesTransition( origin, destination, pct );
+}
 
 void ofx::fixture::States::store(){
     store ( origin );
@@ -149,6 +205,14 @@ void ofx::fixture::States::storeDestination(){
 
 void ofx::fixture::States::recall(){
     recall( origin );
+}
+
+void ofx::fixture::States::lightsRecall(){
+    lightsRecall( origin );
+}
+
+void ofx::fixture::States::degreesRecall(){
+    degreesRecall( origin );
 }
 
 void ofx::fixture::States::store( SystemSnapshot & snap ){
@@ -175,6 +239,36 @@ void ofx::fixture::States::transition( SystemSnapshot & snapA, SystemSnapshot & 
     }
     for( size_t i=0; i<dimmers.size(); ++i ){
         snapA.dimmers[i].mix( *dimmers[i], snapB.dimmers[i], pct );
+    }
+}
+
+void ofx::fixture::States::lightsRecall( SystemSnapshot & snap ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        snap.heads[i].recallLight( *heads[i] );
+    }
+    for( size_t i=0; i<dimmers.size(); ++i ){
+        snap.dimmers[i].recall( *dimmers[i] );
+    }
+}
+
+void ofx::fixture::States::lightsTransition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        snapA.heads[i].mixLight( *heads[i], snapB.heads[i], pct );
+    }
+    for( size_t i=0; i<dimmers.size(); ++i ){
+        snapA.dimmers[i].mix( *dimmers[i], snapB.dimmers[i], pct );
+    }
+}
+
+void ofx::fixture::States::degreesRecall( SystemSnapshot & snap ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        snap.heads[i].recallDegrees( *heads[i] );
+    }
+}
+
+void ofx::fixture::States::degreesTransition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct ){
+    for( size_t i=0; i<heads.size(); ++i ){
+        snapA.heads[i].mixDegrees( *heads[i], snapB.heads[i], pct );
     }
 }
 
@@ -349,32 +443,41 @@ void ofx::fixture::States::HeadSnapshot::store( Head & head ){
 }
 
 void ofx::fixture::States::HeadSnapshot::recall( Head & head ){
+    recallLight( head );
+    recallDegrees( head );
+}
+
+void ofx::fixture::States::HeadSnapshot::recallLight( Head & head ){
     head.dimmer = dimmer.get();
     head.zoom = zoom.get();
     head.red = red.get();
     head.green = green.get();
     head.blue = blue.get();
     head.white = white.get();
-    head.pan = pan.get();
-    head.tilt = tilt.get();
-    head.chaseTarget = chaseTarget.get();
-    head.target = target.get();
     for( size_t i = 0; i<fOptions.size(); ++i ){ head.fOptionals[i]->set( fOptions[i].get()); }
     for( size_t i = 0; i<iOptions.size(); ++i ){ head.iOptionals[i]->set( iOptions[i].get()); }
     for( size_t i = 0; i<bOptions.size(); ++i ){ head.bOptionals[i]->set( bOptions[i].get()); }
 }
 
+void ofx::fixture::States::HeadSnapshot::recallDegrees( Head & head ){
+    head.pan = pan.get();
+    head.tilt = tilt.get();
+    head.chaseTarget = chaseTarget.get();
+    head.target = target.get();
+}
+
 void ofx::fixture::States::HeadSnapshot::mix( Head & head, HeadSnapshot & other, float pct ){
+    mixLight( head, other, pct );
+    mixDegrees( head, other, pct );
+}
+
+void ofx::fixture::States::HeadSnapshot::mixLight( Head & head, HeadSnapshot & other, float pct ){
     head.dimmer = lerp( dimmer, other.dimmer, pct );
     head.zoom = lerp( zoom, other.zoom, pct );
     head.red = lerp( red, other.red, pct );
     head.green = lerp( green, other.green, pct );
     head.blue = lerp( blue, other.blue, pct );
     head.white = lerp( white, other.white, pct );
-    head.pan = lerp( pan, other.pan, pct );
-    head.tilt = lerp( tilt, other.tilt, pct );
-    head.chaseTarget = other.chaseTarget.get();
-    head.target = glm::mix( target.get(), other.target.get(), pct );
     for( size_t i = 0; i<fOptions.size(); ++i ){ 
         head.fOptionals[i]->set( lerp(fOptions[i].get(), other.fOptions[i].get(), pct) ); 
     }
@@ -382,6 +485,13 @@ void ofx::fixture::States::HeadSnapshot::mix( Head & head, HeadSnapshot & other,
         head.iOptionals[i]->set( lerp( float(iOptions[i].get()), float(other.iOptions[i].get()), pct ) ); 
     }
     for( size_t i = 0; i<bOptions.size(); ++i ){ head.bOptionals[i]->set( bOptions[i].get()); }
+}
+
+void ofx::fixture::States::HeadSnapshot::mixDegrees( Head & head, HeadSnapshot & other, float pct ){
+    head.pan = lerp( pan, other.pan, pct );
+    head.tilt = lerp( tilt, other.tilt, pct );
+    head.chaseTarget = other.chaseTarget.get();
+    head.target = glm::mix( target.get(), other.target.get(), pct );
 }
 
 void ofx::fixture::States::HeadSnapshot::fade( Head & head, float pct ){

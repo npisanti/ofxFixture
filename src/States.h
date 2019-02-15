@@ -23,15 +23,30 @@ public:
     
     void transition( std::string tagA, std::string tagB, float pct );
     void transition( std::string tag, float pct );
-    
+    void transition( float pct ); // from origin to destination
+     
     void fade( std::string tag, float pct ); // fade from zero
     void fade(float pct ); // fades origin snap ( 0.0f is black )
     void black(); // all the fixtures' dimmers to zero
     
     void storeOrigin();
     void storeDestination();    
-    void transition( float pct ); // from origin to destination
     
+    void lightsRecall();
+    void lightsRecall( std::string tag );
+    void lightsTransition( std::string tagA, std::string tagB, float pct );
+    void lightsTransition( std::string tag, float pct );
+    void lightsTransition( float pct ); // from origin to destination
+    
+    void lightsFade( std::string tag, float pct  ){ fade( tag, pct);}
+    void lightsFade( float pct ){ fade(pct);}
+    
+    void degreesRecall();
+    void degreesRecall( std::string tag );
+    void degreesTransition( std::string tagA, std::string tagB, float pct );
+    void degreesTransition( std::string tag, float pct );
+    void degreesTransition( float pct ); // from origin to destination
+     
     struct MultipleUpdater{
         ofParameterGroup parameters;
             ofParameterGroup headsSelector;
@@ -61,9 +76,9 @@ private: // ---------------------------------------------------------
     struct DimmerSnapshot{
         void init( Dimmer & dimmer );
         void store( Dimmer & dimmer );
+        void fade( Dimmer & dimmer, float pct );
         void recall( Dimmer & dimmer );
         void mix( Dimmer & dimmer, DimmerSnapshot & other, float pct );
-        void fade( Dimmer & dimmer, float pct );
         
         ofParameterGroup parameters;
             ofParameter<float> dimmer;
@@ -76,7 +91,12 @@ private: // ---------------------------------------------------------
         void init( Head & head );
         void store( Head & head );
         void recall( Head & head );
+            void recallLight( Head & head );
+            void recallDegrees( Head & head );
         void mix( Head & head, HeadSnapshot & other, float pct );
+            void mixLight( Head & head, HeadSnapshot & other, float pct );
+            void mixDegrees( Head & head, HeadSnapshot & other, float pct );
+
         void fade( Head & head, float pct );
         
         ofParameterGroup parameters;
@@ -112,9 +132,16 @@ private: // ---------------------------------------------------------
     std::vector<Dimmer*> dimmers;
     
     void store( SystemSnapshot & snap );
+    void fade( SystemSnapshot & snap, float pct );
+    
     void recall( SystemSnapshot & snap );
     void transition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct );
-    void fade( SystemSnapshot & snap, float pct );
+    
+    void lightsRecall( SystemSnapshot & snap );
+    void lightsTransition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct );
+    
+    void degreesRecall( SystemSnapshot & snap );
+    void degreesTransition( SystemSnapshot & snapA, SystemSnapshot & snapB, float pct );
     
     bool bTouching;
     
