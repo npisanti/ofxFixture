@@ -46,6 +46,8 @@ public:
     // call this to send messages on exit
     virtual void close(){}
     
+    void avoidJump( float angle ); // for moving without jump when possible
+    
 protected: // to be called from subclasses
 
     // those have to be used in the constructor 

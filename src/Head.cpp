@@ -251,6 +251,33 @@ float ofx::fixture::Head::panAngle( glm::vec3 v){
 
 }
 
+void ofx::fixture::Head::avoidJump( float angle ){
+    float mindist = abs( pan-angle );
+    float minangle = angle;
+    
+    float angledown = angle - 360.0f;
+    while( angledown > panMin ){
+        float dist = abs( pan-angledown );
+        if( dist < mindist ){
+            mindist = dist;
+            minangle = angledown;
+        }
+        angledown -= 360.0f;
+    }
+    
+    float angleup = angle + 360.0f;
+    while( angleup < panMax ){
+        float dist = abs( pan-angleup );
+        if( dist < mindist ){
+            mindist = dist;
+            minangle = angleup;
+        }
+        angleup += 360.0f;
+    }
+    
+    pan = minangle;
+}
+
 float ofx::fixture::Head::tiltAngle( glm::vec3 v1, glm::vec3 v2, glm::vec3 v3){
     
     float theta;
