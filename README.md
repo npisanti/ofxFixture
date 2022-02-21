@@ -28,9 +28,5 @@ It means that you can use it when your fixtures has the base on the floor or on 
 ### CREDITS:
 The code for `ofx::fixture::Head` `panAngle()` and `tiltAngle()` is ported to `glm` from Shohei Fujimoto's [oF_movingLightHead_object](https://github.com/sfjmt/oF_movingLightHead_object).
 
-### Donate
-I support you, you support me!    
-If you find this code useful, consider [fueling me with coffee](https://ko-fi.com/npisanti)!
-
 ### LICENSE
 Nicola Pisanti, MIT License 2018
